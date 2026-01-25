@@ -6,25 +6,25 @@ import (
 	"os"
 )
 
-func readLines(filepath string)([]string, error){
+func readLines(filepath string) ([]string, error) {
 	// Read the file and return the lines as a slice of strings
 
 	file, err := os.Open(filepath)
-	lines := []string{} 
-	if err!=nil{
+	lines := []string{}
+	if err != nil {
 		return lines, err
 	}
 	defer file.Close()
 
 	newScanner := bufio.NewScanner(file)
-	for newScanner.Scan(){
+	for newScanner.Scan() {
 		line := newScanner.Text()
 		lines = append(lines, line)
 	}
 	return lines, nil
 }
 
-func main(){
+func main() {
 	// FILE := "README.md"
 	// lines, err := readLines(FILE)
 	// if err!=nil{
@@ -34,11 +34,12 @@ func main(){
 	// 	line = headings(line)
 	// 	fmt.Println(line)
 	// }
-	text := "`x=0`**emphasis** hello world"
+	text := "start text *italics* `x=0`**emphasis** hello world *** this is nested bold italics***"
+	fmt.Println(text)
 	lex := NewLexer(text)
-	token := lex.NextToken()
-	for token.Type !=0{
+	token := lex.ReadNextToken()
+	for token.Type != 0 {
 		fmt.Println(token)
-		token = lex.NextToken()
+		token = lex.ReadNextToken()
 	}
 }
