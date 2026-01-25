@@ -25,12 +25,20 @@ func readLines(filepath string)([]string, error){
 }
 
 func main(){
-	FILE := "README.md"
-	lines, err := readLines(FILE)
-	if err!=nil{
-		fmt.Printf("got error %s", err)
-	}
-	for _, line := range(lines){
-		fmt.Println(line)
+	// FILE := "README.md"
+	// lines, err := readLines(FILE)
+	// if err!=nil{
+	// 	fmt.Printf("got error %s", err)
+	// }
+	// for _, line := range(lines){
+	// 	line = headings(line)
+	// 	fmt.Println(line)
+	// }
+	text := "`x=0`**emphasis** hello world"
+	lex := NewLexer(text)
+	token := lex.NextToken()
+	for token.Type !=0{
+		fmt.Println(token)
+		token = lex.NextToken()
 	}
 }
