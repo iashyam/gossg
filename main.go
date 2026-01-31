@@ -34,12 +34,13 @@ func main() {
 	// 	line = headings(line)
 	// 	fmt.Println(line)
 	// }
-	text := "start text *italics* `x=0`**emphasis** hello world *** this is nested bold italics***"
+	text := "> start text *italics* `x=a*b`**emphasis \\* hello world ***this is nested bold italics***\n"
 	fmt.Println(text)
 	lex := NewLexer(text)
 	token := lex.ReadNextToken()
+	fmt.Println(token)
 	for token.Type != 0 {
-		fmt.Println(token)
 		token = lex.ReadNextToken()
+		fmt.Println(token)
 	}
 }
