@@ -1,46 +1,33 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"os"
 )
 
-func readLines(filepath string) ([]string, error) {
-	// Read the file and return the lines as a slice of strings
-
-	file, err := os.Open(filepath)
-	lines := []string{}
-	if err != nil {
-		return lines, err
-	}
-	defer file.Close()
-
-	newScanner := bufio.NewScanner(file)
-	for newScanner.Scan() {
-		line := newScanner.Text()
-		lines = append(lines, line)
-	}
-	return lines, nil
-}
-
 func main() {
-	// FILE := "README.md"
-	// lines, err := readLines(FILE)
-	// if err!=nil{
-	// 	fmt.Printf("got error %s", err)
-	// }
-	// for _, line := range(lines){
-	// 	line = headings(line)
-	// 	fmt.Println(line)
-	// }
-	text := "> start text *italics* `x=a*b`**emphasis \\* hello world ***this is nested bold italics***\n"
-	fmt.Println(text)
-	lex := NewLexer(text)
-	token := lex.ReadNextToken()
-	fmt.Println(token)
-	for token.Type != 0 {
-		token = lex.ReadNextToken()
-		fmt.Println(token)
+	fileName := "test.md"
+	if len(os.Args) > 1 {
+		fileName = os.Args[1]
 	}
+
+	content, err := os.ReadFile(fileName)
+	if err != nil {
+		fmt.Printf("Error reading file: %v\n", err)
+		return
+	}
+
+	lexer := NewLexer(string(content))
+	var tokens []Token
+	for {
+		token := lexer.ReadNextToken()
+		tokens = append(tokens, token)
+		if token.Type == EOF {
+			break
+		}
+	}
+
+	parser := NewParser(tokens)
+	html := parser.Parse()
+	fmt.Println(html)
 }

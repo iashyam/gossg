@@ -128,7 +128,7 @@ func (l *Lex) ReadText() string {
 		return ""
 	}
 	for l.char != 0 {
-		if (l.state != StateInLineCode && l.char == '*') || l.char == '\n' || l.char == '`' || l.char == '\\' {
+		if (l.state != StateInLineCode && (l.char == '*' || l.char == '$')) || l.char == '\n' || l.char == '`' || l.char == '\\' {
 			break
 		}
 		l.ReadChar()
@@ -144,7 +144,15 @@ func (l *Lex) ListHandler() Token {
 
 func (l *Lex) MathHandler() Token {
 	l.ReadChar() // '$'
-	return Token{Type: MATH, value: "$ $"}
+	start := l.pos
+	for l.char != 0 && l.char != '$' {
+		l.ReadChar()
+	}
+	if l.char == '$' {
+		l.ReadChar() // consume closing '$'
+		return Token{Type: MATH, value: l.input[start : l.pos-1]}
+	}
+	return Token{Type: MATH, value: l.input[start:l.pos]}
 }
 
 func (l *Lex) ReadNextToken() Token {
@@ -189,7 +197,7 @@ func (l *Lex) ReadNextToken() Token {
 			}
 		}
 
-		if l.isAtLineStart && (l.char == '-' || l.char=='*' || l.char=='+') && l.PeekAhead() == ' ' {
+		if l.isAtLineStart && (l.char == '-' || l.char == '*' || l.char == '+') && l.PeekAhead() == ' ' {
 			return l.ListHandler()
 		}
 		if l.char == '>' && l.PeekAhead() == ' ' {
