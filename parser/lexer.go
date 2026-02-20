@@ -59,20 +59,21 @@ type Token struct {
 }
 
 type Lex struct {
-	input         string
-	pos           int  //current pos
-	char          byte //current character
-	isAtLineStart bool
-	state         State
+	input    string
+	pos      int  //current pos
+	char     byte //current character
+	prevChar byte //previous character
+	state    State
 }
 
 func NewLexer(input string) *Lex {
-	l := &Lex{input: input, pos: -1, state: StateText, isAtLineStart: true}
+	l := &Lex{input: input, pos: -1, state: StateText, prevChar: 0}
 	l.ReadChar()
 	return l
 }
 
 func (l *Lex) ReadChar() {
+	l.prevChar = l.char
 	l.pos++
 	if l.pos >= len(l.input) {
 		l.char = 0
@@ -102,7 +103,6 @@ func (l *Lex) HeadingHandler() Token {
 	}
 	tokenVal += " "
 	l.ReadChar() // ' '
-	l.isAtLineStart = false
 	return Token{Type: HEADING, value: tokenVal}
 }
 
@@ -171,7 +171,6 @@ func (l *Lex) ReadNextToken() Token {
 		}
 
 		if l.char == '\n' {
-			l.isAtLineStart = true
 			if l.PeekAhead() == '\n' {
 				l.ReadChar()
 				l.ReadChar()
@@ -182,7 +181,9 @@ func (l *Lex) ReadNextToken() Token {
 			return Token{Type: NEWLINE, value: "NEWLINE"}
 		}
 
-		if l.isAtLineStart && l.char == '#' {
+		isAtLineStart := l.prevChar == '\n' || l.prevChar == 0
+
+		if isAtLineStart && l.char == '#' {
 			count := 0
 			for i := l.pos; i < len(l.input); i++ {
 				if l.input[i] == '#' {
@@ -197,7 +198,7 @@ func (l *Lex) ReadNextToken() Token {
 			}
 		}
 
-		if l.isAtLineStart && (l.char == '-' || l.char == '*' || l.char == '+') && l.PeekAhead() == ' ' {
+		if isAtLineStart && (l.char == '-' || l.char == '*' || l.char == '+') && l.PeekAhead() == ' ' {
 			return l.ListHandler()
 		}
 		if l.char == '>' && l.PeekAhead() == ' ' {
@@ -215,7 +216,6 @@ func (l *Lex) ReadNextToken() Token {
 		} else if l.char == '$' {
 			return l.MathHandler()
 		} else {
-			l.isAtLineStart = false
 			value := l.ReadText()
 			return Token{Type: TEXT, value: value}
 		}

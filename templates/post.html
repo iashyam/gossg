@@ -1,0 +1,21 @@
+{{ define "content" }}
+<article>
+    <h1>{{ .Title }}</h1>
+
+    {{ if .Date }}
+    <div class="post-meta">
+        <time datetime="{{ .Date }}">{{ .Date }}</time>
+        {{ if .Tags }}
+        <span style="margin: 0 10px;">•</span>
+        {{ range .Tags }}
+        <a href="/tags/{{ . }}.html" class="tag">#{{ . }}</a>
+        {{ end }}
+        {{ end }}
+    </div>
+    {{ end }}
+
+    <div class="post-content">
+        {{ .ContentHTML }}
+    </div>
+</article>
+{{ end }}

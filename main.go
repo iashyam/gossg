@@ -2,33 +2,84 @@ package main
 
 import (
 	"fmt"
-	"gossg/parser"
+	"html/template"
 	"os"
+	"path/filepath"
 )
 
 func main() {
-	fileName := "test.md"
-	if len(os.Args) > 1 {
-		fileName = os.Args[1]
-	}
+	// 1. Initialize Site
+	site := NewSite()
 
-	content, err := os.ReadFile(fileName)
-	if err != nil {
-		fmt.Printf("Error reading file: %v\n", err)
+	// 2. Load Content
+	fmt.Println("Loading content...")
+	if err := site.LoadContent("content"); err != nil {
+		fmt.Printf("Error loading content: %v\n", err)
 		return
 	}
 
-	lexer := parser.NewLexer(string(content))
-	var tokens []parser.Token
-	for {
-		token := lexer.ReadNextToken()
-		tokens = append(tokens, token)
-		if token.Type == parser.EOF {
-			break
-		}
+	// 3. Setup output directory
+	if err := os.RemoveAll("public"); err != nil {
+		fmt.Printf("Error clearing public dir: %v\n", err)
+		return
+	}
+	if err := os.MkdirAll("public/posts", 0755); err != nil {
+		fmt.Printf("Error creating public dir: %v\n", err)
+		return
+	}
+	if err := os.MkdirAll("public/tags", 0755); err != nil {
+		fmt.Printf("Error creating public tags dir: %v\n", err)
+		return
 	}
 
-	p := parser.NewParser(tokens)
-	html := p.Parse()
-	fmt.Println(html)
+	// 4. Load Templates
+	// We parse the base template alongside each specific template
+	postTmpl := template.Must(template.ParseFiles("templates/base.html", "templates/post.html"))
+	listTmpl := template.Must(template.ParseFiles("templates/base.html", "templates/list.html"))
+	tagsTmpl := template.Must(template.ParseFiles("templates/base.html", "templates/tags.html"))
+
+	// 5. Generate Pages
+	for _, page := range site.Pages {
+		generateFile(filepath.Join("public", page.Slug+".html"), postTmpl, page)
+	}
+
+	// 6. Generate Posts
+	for _, post := range site.Posts {
+		generateFile(filepath.Join("public", "posts", post.Slug+".html"), postTmpl, post)
+	}
+
+	// 7. Generate Timeline (Index)
+	generateFile("public/index.html", listTmpl, map[string]interface{}{
+		"Title": "Timeline",
+		"Posts": site.Posts,
+	})
+
+	// 8. Generate Tags Index
+	generateFile("public/tags.html", tagsTmpl, map[string]interface{}{
+		"Title": "All Tags",
+		"Tags":  site.Tags,
+	})
+
+	// 9. Generate Individual Tag Pages
+	for tag, posts := range site.Tags {
+		generateFile(filepath.Join("public", "tags", tag+".html"), listTmpl, map[string]interface{}{
+			"Title": "Tag: " + tag,
+			"Posts": posts,
+		})
+	}
+
+	fmt.Println("Site generation complete! Check the 'public' directory.")
+}
+
+func generateFile(outputPath string, tmpl *template.Template, data interface{}) {
+	file, err := os.Create(outputPath)
+	if err != nil {
+		fmt.Printf("Failed to create file %s: %v\n", outputPath, err)
+		return
+	}
+	defer file.Close()
+
+	if err := tmpl.Execute(file, data); err != nil {
+		fmt.Printf("Failed to execute template for %s: %v\n", outputPath, err)
+	}
 }
