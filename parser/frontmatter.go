@@ -11,6 +11,7 @@ type Frontmatter struct {
 	Title string   `yaml:"title"`
 	Date  string   `yaml:"date"`
 	Tags  []string `yaml:"tags"`
+	Image string   `yaml:"image"`
 }
 
 // ExtractFrontmatter separates the YAML frontmatter from the Markdown content.

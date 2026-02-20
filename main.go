@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"html/template"
+	"io"
 	"os"
 	"path/filepath"
 )
@@ -32,9 +33,16 @@ func main() {
 		return
 	}
 
-	// 4. Load Templates
+	// 4. Copy Static Assets
+	fmt.Println("Copying assets...")
+	if err := copyDir("content/assets", "public/assets"); err != nil {
+		fmt.Printf("Warning: failed to copy assets: %v\n", err)
+	}
+
+	// 5. Load Templates
 	// We parse the base template alongside each specific template
 	postTmpl := template.Must(template.ParseFiles("templates/base.html", "templates/post.html"))
+	indexTmpl := template.Must(template.ParseFiles("templates/base.html", "templates/index.html"))
 	listTmpl := template.Must(template.ParseFiles("templates/base.html", "templates/list.html"))
 	tagsTmpl := template.Must(template.ParseFiles("templates/base.html", "templates/tags.html"))
 
@@ -48,8 +56,14 @@ func main() {
 		generateFile(filepath.Join("public", "posts", post.Slug+".html"), postTmpl, post)
 	}
 
-	// 7. Generate Timeline (Index)
-	generateFile("public/index.html", listTmpl, map[string]interface{}{
+	// 7. Generate Home Page (Index)
+	generateFile("public/index.html", indexTmpl, map[string]interface{}{
+		"Title": "Home",
+		"Posts": site.Posts,
+	})
+
+	// 8. Generate Timeline
+	generateFile("public/timeline.html", listTmpl, map[string]interface{}{
 		"Title": "Timeline",
 		"Posts": site.Posts,
 	})
@@ -82,4 +96,69 @@ func generateFile(outputPath string, tmpl *template.Template, data interface{}) 
 	if err := tmpl.Execute(file, data); err != nil {
 		fmt.Printf("Failed to execute template for %s: %v\n", outputPath, err)
 	}
+}
+
+// copyDir recursively copies a directory tree, attempting to preserve permissions.
+// Source directory must exist.
+func copyDir(src string, dst string) error {
+	srcInfo, err := os.Stat(src)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil // Source directory doesn't exist, ignore
+		}
+		return err
+	}
+
+	if err := os.MkdirAll(dst, srcInfo.Mode()); err != nil {
+		return err
+	}
+
+	entries, err := os.ReadDir(src)
+	if err != nil {
+		return err
+	}
+
+	for _, entry := range entries {
+		srcPath := filepath.Join(src, entry.Name())
+		dstPath := filepath.Join(dst, entry.Name())
+
+		if entry.IsDir() {
+			err = copyDir(srcPath, dstPath)
+			if err != nil {
+				return err
+			}
+		} else {
+			err = copyFile(srcPath, dstPath)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+// copyFile copies a single file from src to dst
+func copyFile(src, dst string) error {
+	in, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer in.Close()
+
+	out, err := os.Create(dst)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+
+	_, err = io.Copy(out, in)
+	if err != nil {
+		return err
+	}
+
+	srcInfo, err := os.Stat(src)
+	if err != nil {
+		return err
+	}
+	return os.Chmod(dst, srcInfo.Mode())
 }

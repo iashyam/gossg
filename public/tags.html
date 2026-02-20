@@ -1,59 +1,292 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+    class="antialiased text-gray-900 bg-white dark:bg-black dark:text-gray-100 selection:bg-gray-200 dark:selection:bg-gray-800">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Tags - goSSG</title>
-    <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 2rem; color: #333; }
-        header { border-bottom: 1px solid #eee; margin-bottom: 2rem; padding-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; }
-        header a { color: #333; text-decoration: none; font-weight: bold; margin-right: 1rem; }
-        .post-meta { color: #666; font-size: 0.9em; margin-bottom: 2rem; }
-        .tag { background: #eee; padding: 0.2rem 0.5rem; border-radius: 3px; text-decoration: none; color: #333; font-size: 0.8em; margin-right: 0.5rem; }
-        code { background: #f4f4f4; padding: 0.2rem 0.4rem; border-radius: 3px; font-family: monospace; }
-        blockquote { border-left: 4px solid #ddd; margin: 0; padding-left: 1rem; color: #666; }
-        img { max-width: 100%; height: auto; }
+
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'media',
+            theme: {
+                extend: {
+                    sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                }
+            }
+        }
+        }
+    </script>
+
+    
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+
+    
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+    <style type="text/tailwindcss">
+        .markdown-content h1 {
+            @apply text-4xl sm:text-5xl font-bold tracking-tight mb-8 mt-12 text-gray-900 dark:text-white;
+        }
+
+        .markdown-content h2 {
+            @apply text-2xl sm:text-3xl font-bold tracking-tight mb-6 mt-10 text-gray-900 dark:text-white;
+        }
+
+        .markdown-content h3 {
+            @apply text-xl sm:text-2xl font-semibold tracking-tight mb-4 mt-8 text-gray-900 dark:text-white;
+        }
+
+        .markdown-content p {
+            @apply text-[1.05rem] md:text-lg leading-relaxed mb-6 text-gray-800 dark:text-gray-300;
+        }
+
+        .markdown-content a {
+            @apply text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline underline-offset-2;
+        }
+
+        .markdown-content ul {
+            @apply list-disc list-outside ml-6 mb-6 text-lg text-gray-700 dark:text-gray-300 space-y-2;
+        }
+
+        .markdown-content ol {
+            @apply list-decimal list-outside ml-6 mb-6 text-lg text-gray-700 dark:text-gray-300 space-y-2;
+        }
+
+        .markdown-content blockquote {
+            @apply border-l-4 border-gray-300 dark:border-gray-700 pl-4 py-1 mb-6 text-gray-600 dark:text-gray-400 italic bg-gray-50 dark:bg-gray-900;
+        }
+
+        .markdown-content img {
+            @apply shadow-sm my-8 mx-auto ring-1 ring-gray-200 dark:ring-gray-800;
+        }
+
+        .markdown-content code:not(pre code) {
+            @apply bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-200 px-1.5 py-0.5 rounded-md font-mono text-sm break-words;
+        }
+
+        .markdown-content pre {
+            @apply bg-[#282c34] rounded-lg shadow-sm overflow-x-auto p-4 mb-8 ring-1 ring-gray-200 dark:ring-gray-800;
+        }
+
+        .markdown-content pre code {
+            @apply text-sm leading-relaxed text-gray-300 bg-transparent p-0 border-0;
+        }
+
+         
+        .markdown-content mjx-container[display="true"] { 
+            @apply overflow-x-auto overflow-y-hidden max-w-full block py-4;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
     </style>
 </head>
-<body>
-    <header>
-        <div><a href="/" style="font-size: 1.5em;">goSSG</a></div>
-        <nav>
-            <a href="/">Posts</a>
-            <a href="/tags">Tags</a>
-            <a href="/about.html">About</a>
-        </nav>
-    </header>
-    
-    <main>
-        
-<div class="tags-page">
-    <h1>All Tags</h1>
 
-    <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2rem;">
+<body class="min-h-screen flex flex-col">
+    <header
+        class="sticky top-0 z-50 bg-white/90 dark:bg-black/90 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 transition-all">
+        <div class="max-w-3xl mx-auto px-6 py-4 flex flex-wrap justify-between items-center w-full gap-4">
+            <a href="/" class="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+                goSSG
+            </a>
+            <nav class="flex gap-6 text-[0.9rem] font-medium text-gray-500 dark:text-gray-400">
+                <a href="/" class="hover:text-gray-900 dark:hover:text-white transition-colors">Home</a>
+                <a href="/timeline.html"
+                    class="hover:text-gray-900 dark:hover:text-white transition-colors">Timeline</a>
+                <a href="/tags.html" class="hover:text-gray-900 dark:hover:text-white transition-colors">Tags</a>
+                <a href="/about.html" class="hover:text-gray-900 dark:hover:text-white transition-colors">About</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow w-full max-w-3xl mx-auto px-6 py-12 sm:py-16">
         
-        <div style="background: #f9f9f9; border: 1px solid #eee; padding: 1rem; border-radius: 5px; min-width: 200px;">
-            <h2 style="margin-top: 0;">
-                <a href="/tags/hello.html" style="text-decoration: none; color: #333;">#hello</a>
-                <span style="font-size: 0.8em; color: #888; font-weight: normal;">(1)</span>
-            </h2>
-            <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.9em;">
-                
-                <li style="margin-bottom: 0.5rem;"><a href="/posts/test.html" style="color: #666;">Test Post</a></li>
-                
-            </ul>
+<div class="animate-in fade-in max-w-3xl mx-auto">
+    <div class="mb-10 sm:mb-12 border-b border-gray-100 dark:border-gray-800 pb-8 text-left">
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-gray-900 dark:text-white mb-4">
+            Topics & Tags
+        </h1>
+        <p class="text-[1.1rem] text-gray-500 dark:text-gray-400 font-medium">Browse posts categorized by specific
+            topics.</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        
+        <div
+            class="group relative bg-gray-50 dark:bg-gray-900/50 rounded-2xl p-6 border border-gray-100 dark:border-gray-800 transition-all duration-300">
+            <div class="relative z-10">
+                <div
+                    class="flex items-baseline justify-between mb-5 border-b border-gray-100 dark:border-gray-800 pb-4">
+                    <h2 class="text-2xl font-bold">
+                        <a href="/tags/Article.html"
+                            class="text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors before:absolute before:inset-0">
+                            #Article
+                        </a>
+                    </h2>
+                    <span
+                        class="inline-flex items-center justify-center bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs font-bold px-3 py-1 rounded-full">
+                        1
+                    </span>
+                </div>
+
+                <ul class="space-y-3 font-medium text-sm text-gray-600 dark:text-gray-400">
+                    
+                    
+                    <li class="flex items-start gap-2.5">
+                        <span
+                            class="mt-1.5 w-1.5 h-1.5 rounded-full bg-gray-300 dark:bg-gray-700 transition-colors shrink-0"></span>
+                        <span class="line-clamp-2 leading-relaxed">FiniteDiffrence</span>
+                    </li>
+                    
+                    
+                    
+                </ul>
+            </div>
         </div>
         
-        <div style="background: #f9f9f9; border: 1px solid #eee; padding: 1rem; border-radius: 5px; min-width: 200px;">
-            <h2 style="margin-top: 0;">
-                <a href="/tags/world.html" style="text-decoration: none; color: #333;">#world</a>
-                <span style="font-size: 0.8em; color: #888; font-weight: normal;">(1)</span>
-            </h2>
-            <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.9em;">
-                
-                <li style="margin-bottom: 0.5rem;"><a href="/posts/test.html" style="color: #666;">Test Post</a></li>
-                
-            </ul>
+        <div
+            class="group relative bg-gray-50 dark:bg-gray-900/50 rounded-2xl p-6 border border-gray-100 dark:border-gray-800 transition-all duration-300">
+            <div class="relative z-10">
+                <div
+                    class="flex items-baseline justify-between mb-5 border-b border-gray-100 dark:border-gray-800 pb-4">
+                    <h2 class="text-2xl font-bold">
+                        <a href="/tags/hello.html"
+                            class="text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors before:absolute before:inset-0">
+                            #hello
+                        </a>
+                    </h2>
+                    <span
+                        class="inline-flex items-center justify-center bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs font-bold px-3 py-1 rounded-full">
+                        1
+                    </span>
+                </div>
+
+                <ul class="space-y-3 font-medium text-sm text-gray-600 dark:text-gray-400">
+                    
+                    
+                    <li class="flex items-start gap-2.5">
+                        <span
+                            class="mt-1.5 w-1.5 h-1.5 rounded-full bg-gray-300 dark:bg-gray-700 transition-colors shrink-0"></span>
+                        <span class="line-clamp-2 leading-relaxed">Test Post</span>
+                    </li>
+                    
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        
+        <div
+            class="group relative bg-gray-50 dark:bg-gray-900/50 rounded-2xl p-6 border border-gray-100 dark:border-gray-800 transition-all duration-300">
+            <div class="relative z-10">
+                <div
+                    class="flex items-baseline justify-between mb-5 border-b border-gray-100 dark:border-gray-800 pb-4">
+                    <h2 class="text-2xl font-bold">
+                        <a href="/tags/physics.html"
+                            class="text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors before:absolute before:inset-0">
+                            #physics
+                        </a>
+                    </h2>
+                    <span
+                        class="inline-flex items-center justify-center bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs font-bold px-3 py-1 rounded-full">
+                        1
+                    </span>
+                </div>
+
+                <ul class="space-y-3 font-medium text-sm text-gray-600 dark:text-gray-400">
+                    
+                    
+                    <li class="flex items-start gap-2.5">
+                        <span
+                            class="mt-1.5 w-1.5 h-1.5 rounded-full bg-gray-300 dark:bg-gray-700 transition-colors shrink-0"></span>
+                        <span class="line-clamp-2 leading-relaxed">FiniteDiffrence</span>
+                    </li>
+                    
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        
+        <div
+            class="group relative bg-gray-50 dark:bg-gray-900/50 rounded-2xl p-6 border border-gray-100 dark:border-gray-800 transition-all duration-300">
+            <div class="relative z-10">
+                <div
+                    class="flex items-baseline justify-between mb-5 border-b border-gray-100 dark:border-gray-800 pb-4">
+                    <h2 class="text-2xl font-bold">
+                        <a href="/tags/programming.html"
+                            class="text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors before:absolute before:inset-0">
+                            #programming
+                        </a>
+                    </h2>
+                    <span
+                        class="inline-flex items-center justify-center bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs font-bold px-3 py-1 rounded-full">
+                        1
+                    </span>
+                </div>
+
+                <ul class="space-y-3 font-medium text-sm text-gray-600 dark:text-gray-400">
+                    
+                    
+                    <li class="flex items-start gap-2.5">
+                        <span
+                            class="mt-1.5 w-1.5 h-1.5 rounded-full bg-gray-300 dark:bg-gray-700 transition-colors shrink-0"></span>
+                        <span class="line-clamp-2 leading-relaxed">Table Driven Tests in Python</span>
+                    </li>
+                    
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        
+        <div
+            class="group relative bg-gray-50 dark:bg-gray-900/50 rounded-2xl p-6 border border-gray-100 dark:border-gray-800 transition-all duration-300">
+            <div class="relative z-10">
+                <div
+                    class="flex items-baseline justify-between mb-5 border-b border-gray-100 dark:border-gray-800 pb-4">
+                    <h2 class="text-2xl font-bold">
+                        <a href="/tags/world.html"
+                            class="text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors before:absolute before:inset-0">
+                            #world
+                        </a>
+                    </h2>
+                    <span
+                        class="inline-flex items-center justify-center bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs font-bold px-3 py-1 rounded-full">
+                        1
+                    </span>
+                </div>
+
+                <ul class="space-y-3 font-medium text-sm text-gray-600 dark:text-gray-400">
+                    
+                    
+                    <li class="flex items-start gap-2.5">
+                        <span
+                            class="mt-1.5 w-1.5 h-1.5 rounded-full bg-gray-300 dark:bg-gray-700 transition-colors shrink-0"></span>
+                        <span class="line-clamp-2 leading-relaxed">Test Post</span>
+                    </li>
+                    
+                    
+                    
+                </ul>
+            </div>
         </div>
         
     </div>
@@ -61,8 +294,13 @@
 
     </main>
 
-    <footer style="margin-top: 4rem; text-align: center; color: #777; font-size: 0.9em;">
-        Generated with goSSG
+    <footer class="py-10 border-t border-gray-100 dark:border-gray-900 mt-auto text-center">
+        <div class="max-w-3xl mx-auto px-6">
+            <p class="text-[0.8rem] text-gray-400 dark:text-gray-500">
+                &copy; 2026 goSSG. Designed cleanly.
+            </p>
+        </div>
     </footer>
 </body>
+
 </html>

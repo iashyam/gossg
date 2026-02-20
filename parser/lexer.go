@@ -128,8 +128,14 @@ func (l *Lex) ReadText() string {
 		return ""
 	}
 	for l.char != 0 {
-		if (l.state != StateInLineCode && (l.char == '*' || l.char == '$')) || l.char == '\n' || l.char == '`' || l.char == '\\' {
-			break
+		if l.state == StateInLineCode {
+			if l.char == '`' {
+				break
+			}
+		} else {
+			if l.char == '*' || l.char == '$' || l.char == '\n' || l.char == '`' || l.char == '\\' {
+				break
+			}
 		}
 		l.ReadChar()
 	}

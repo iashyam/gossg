@@ -1,20 +1,38 @@
 {{ define "content" }}
-<article>
-    <h1>{{ .Title }}</h1>
+<article class="animate-in fade-in">
+    <header class="mb-10 sm:mb-14 text-left max-w-3xl mx-auto">
+        <h1
+            class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight mb-6 text-gray-900 dark:text-white leading-tight">
+            {{ .Title }}
+        </h1>
 
-    {{ if .Date }}
-    <div class="post-meta">
-        <time datetime="{{ .Date }}">{{ .Date }}</time>
-        {{ if .Tags }}
-        <span style="margin: 0 10px;">•</span>
-        {{ range .Tags }}
-        <a href="/tags/{{ . }}.html" class="tag">#{{ . }}</a>
-        {{ end }}
-        {{ end }}
-    </div>
-    {{ end }}
+        <div class="flex flex-wrap items-center gap-4 text-sm font-semibold text-gray-500 dark:text-gray-400">
+            <time datetime="{{ .Date }}" class="flex items-center gap-1.5">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                    </path>
+                </svg>
+                {{ .Date }}
+            </time>
 
-    <div class="post-content">
+            {{ if .Tags }}
+            <div class="hidden sm:block text-gray-300 dark:text-gray-600">•</div>
+            <div class="flex flex-wrap gap-2">
+                {{ range .Tags }}
+                <a href="/tags/{{ . }}.html"
+                    class="inline-flex items-center text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+                    #{{ . }}
+                </a>
+                {{ end }}
+            </div>
+            {{ end }}
+        </div>
+    </header>
+
+    <hr class="my-8 border-gray-100 dark:border-gray-800/80">
+
+    <div class="markdown-content max-w-[85ch] mx-auto text-[1.05rem] md:text-lg">
         {{ .ContentHTML }}
     </div>
 </article>

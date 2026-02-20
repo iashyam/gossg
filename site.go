@@ -8,6 +8,9 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+
+	mathjax "github.com/litao91/goldmark-mathjax"
+	"github.com/yuin/goldmark"
 )
 
 // Post represents a blog post
@@ -108,17 +111,15 @@ func (s *Site) loadPosts(dir string) error {
 			}
 
 			// Parse Markdown to HTML
-			lex := parser.NewLexer(textContent)
-			var tokens []parser.Token
-			for {
-				tok := lex.ReadNextToken()
-				tokens = append(tokens, tok)
-				if tok.Type == parser.EOF {
-					break
-				}
+			var buf strings.Builder
+			md := goldmark.New(
+				goldmark.WithExtensions(mathjax.MathJax),
+			)
+			if err := md.Convert([]byte(textContent), &buf); err != nil {
+				fmt.Printf("Warning: failed to convert markdown for %s: %v\n", path, err)
+				continue
 			}
-			p := parser.NewParser(tokens)
-			htmlContent := p.Parse()
+			htmlContent := buf.String()
 
 			s.Cache.Files[path] = CachedFile{
 				Hash:        hash,
@@ -191,17 +192,15 @@ func (s *Site) loadPages(dir string) error {
 			}
 
 			// Parse Markdown to HTML
-			lex := parser.NewLexer(textContent)
-			var tokens []parser.Token
-			for {
-				tok := lex.ReadNextToken()
-				tokens = append(tokens, tok)
-				if tok.Type == parser.EOF {
-					break
-				}
+			var buf strings.Builder
+			md := goldmark.New(
+				goldmark.WithExtensions(mathjax.MathJax),
+			)
+			if err := md.Convert([]byte(textContent), &buf); err != nil {
+				fmt.Printf("Warning: failed to convert markdown for %s: %v\n", path, err)
+				continue
 			}
-			p := parser.NewParser(tokens)
-			htmlContent := p.Parse()
+			htmlContent := buf.String()
 
 			s.Cache.Files[path] = CachedFile{
 				Hash:        hash,
