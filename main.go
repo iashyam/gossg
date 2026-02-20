@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"gossg/parser"
 	"os"
 )
 
@@ -17,17 +18,17 @@ func main() {
 		return
 	}
 
-	lexer := NewLexer(string(content))
-	var tokens []Token
+	lexer := parser.NewLexer(string(content))
+	var tokens []parser.Token
 	for {
 		token := lexer.ReadNextToken()
 		tokens = append(tokens, token)
-		if token.Type == EOF {
+		if token.Type == parser.EOF {
 			break
 		}
 	}
 
-	parser := NewParser(tokens)
-	html := parser.Parse()
+	p := parser.NewParser(tokens)
+	html := p.Parse()
 	fmt.Println(html)
 }
