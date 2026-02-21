@@ -6,7 +6,7 @@
     <!-- Latest Post Hero Card -->
     {{ $latest := index .Posts 0 }}
     <article
-        class="group flex flex-col mb-16 md:mb-20 rounded-3xl overflow-hidden shadow-sm dark:shadow-none bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 transition-shadow duration-500">
+        class="group relative flex flex-col mb-16 md:mb-20 rounded-3xl overflow-hidden shadow-sm dark:shadow-none bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 transition-shadow duration-500">
         <a href="/posts/{{ $latest.Slug }}.html"
             class="block w-full aspect-[16/9] sm:aspect-[21/9] relative overflow-hidden bg-gray-100 dark:bg-gray-800">
             {{ if $latest.Image }}
@@ -51,7 +51,7 @@
         {{ range slice .Posts 1 }}
         <!-- Standard Posts -->
         <article
-            class="group flex flex-col bg-white dark:bg-gray-900 rounded-3xl overflow-hidden border border-gray-100 dark:border-gray-800 transition-all duration-300">
+            class="group relative flex flex-col bg-white dark:bg-gray-900 rounded-3xl overflow-hidden border border-gray-100 dark:border-gray-800 transition-all duration-300">
             <a href="/posts/{{ .Slug }}.html"
                 class="block aspect-[16/10] sm:aspect-video relative overflow-hidden bg-gray-100 dark:bg-gray-800">
                 {{ if .Image }}
