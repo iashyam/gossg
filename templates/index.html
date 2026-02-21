@@ -6,9 +6,9 @@
     <!-- Latest Post Hero Card -->
     {{ $latest := index .Posts 0 }}
     <article
-        class="group relative flex flex-col mb-16 md:mb-20 rounded-3xl overflow-hidden shadow-sm dark:shadow-none bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 transition-shadow duration-500">
+        class="group relative flex flex-col mb-12 md:mb-16 rounded-3xl overflow-hidden shadow-sm dark:shadow-none bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 transition-shadow duration-500">
         <a href="/posts/{{ $latest.Slug }}.html"
-            class="block w-full aspect-[16/9] sm:aspect-[21/9] relative overflow-hidden bg-gray-100 dark:bg-gray-800">
+            class="block w-full aspect-video sm:aspect-[2/1] md:aspect-[2.5/1] relative overflow-hidden bg-gray-100 dark:bg-gray-800">
             {{ if $latest.Image }}
             <img src="/{{ $latest.Image }}" alt="{{ $latest.Title }}"
                 class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 md:group-hover:scale-105">
@@ -17,11 +17,11 @@
                 No image available</div>
             {{ end }}
         </a>
-        <div class="flex flex-col justify-center p-8 sm:p-10 md:p-12 lg:p-14">
-            <time
-                class="text-xs sm:text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-4 block">{{
+        <div class="flex flex-col justify-center p-6 sm:p-8 md:p-10">
+            <time class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-3 block">{{
                 $latest.Date }} · Latest</time>
-            <h2 class="text-3xl sm:text-4xl font-black text-gray-900 dark:text-gray-100 leading-[1.15] mb-6">
+            <h2
+                class="text-2xl sm:text-3xl md:text-4xl font-black text-gray-900 dark:text-gray-100 leading-[1.15] mb-5">
                 <a href="/posts/{{ $latest.Slug }}.html"
                     class="before:absolute before:inset-0 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{{
                     $latest.Title }}</a>
