@@ -45,6 +45,7 @@ func main() {
 	indexTmpl := template.Must(template.ParseFiles("templates/base.html", "templates/index.html"))
 	listTmpl := template.Must(template.ParseFiles("templates/base.html", "templates/list.html"))
 	tagsTmpl := template.Must(template.ParseFiles("templates/base.html", "templates/tags.html"))
+	projTmpl := template.Must(template.ParseFiles("templates/base.html", "templates/projects.html"))
 
 	// 5. Generate Pages
 	for _, page := range site.Pages {
@@ -105,7 +106,13 @@ func main() {
 		"Tags":  site.Tags,
 	})
 
-	// 9. Generate Individual Tag Pages
+	// 9. Generate Projects Page
+	generateFile("public/projects.html", projTmpl, map[string]interface{}{
+		"Title":    "Projects",
+		"Projects": site.Projects,
+	})
+
+	// 10. Generate Individual Tag Pages
 	for tag, posts := range site.Tags {
 		generateFile(filepath.Join("public", "tags", tag+".html"), listTmpl, map[string]interface{}{
 			"Title": "Tag: " + tag,

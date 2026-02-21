@@ -37,20 +37,29 @@ type Page struct {
 	Slug        string
 }
 
+// Project represents a project to display on the projects page
+type Project struct {
+	parser.Frontmatter
+	ContentHTML template.HTML
+	Slug        string
+}
+
 // Site holds all the content needed to generate the static site
 type Site struct {
-	Posts []Post
-	Pages []Page
-	Tags  map[string][]Post
-	Cache *Cache
+	Posts    []Post
+	Pages    []Page
+	Projects []Project
+	Tags     map[string][]Post
+	Cache    *Cache
 }
 
 func NewSite() *Site {
 	return &Site{
-		Posts: []Post{},
-		Pages: []Page{},
-		Tags:  make(map[string][]Post),
-		Cache: NewCache(".gossg_cache.json"),
+		Posts:    []Post{},
+		Pages:    []Page{},
+		Projects: []Project{},
+		Tags:     make(map[string][]Post),
+		Cache:    NewCache(".gossg_cache.json"),
 	}
 }
 
@@ -69,6 +78,12 @@ func (s *Site) LoadContent(contentDir string) error {
 	pagesDir := filepath.Join(contentDir, "pages")
 	if err := s.loadPages(pagesDir); err != nil {
 		return fmt.Errorf("error loading pages: %w", err)
+	}
+
+	// 3. Load Projects
+	projectsDir := filepath.Join(contentDir, "projects")
+	if err := s.loadProjects(projectsDir); err != nil {
+		return fmt.Errorf("error loading projects: %w", err)
 	}
 
 	// Save cache back to disk
@@ -232,6 +247,77 @@ func (s *Site) loadPages(dir string) error {
 		}
 
 		s.Pages = append(s.Pages, page)
+	}
+
+	return nil
+}
+
+func (s *Site) loadProjects(dir string) error {
+	files, err := os.ReadDir(dir)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil
+		}
+		return err
+	}
+
+	for _, file := range files {
+		if file.IsDir() || !strings.HasSuffix(file.Name(), ".md") {
+			continue
+		}
+
+		path := filepath.Join(dir, file.Name())
+		content, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+
+		hash := ComputeHash(content)
+		slug := strings.TrimSuffix(file.Name(), ".md")
+
+		var project Project
+		if cachedFile, hit := s.Cache.Files[path]; hit && cachedFile.Hash == hash {
+			// Cache Hit
+			fmt.Printf("Cache hit: %s\n", path)
+			project = Project{
+				Frontmatter: cachedFile.Frontmatter,
+				ContentHTML: template.HTML(cachedFile.ContentHTML),
+				Slug:        slug,
+			}
+		} else {
+			// Cache Miss
+			fmt.Printf("Cache miss: parsing %s...\n", path)
+			fm, textContent, err := parser.ExtractFrontmatter(string(content))
+			if err != nil {
+				fmt.Printf("Warning: failed to parse frontmatter for %s: %v\n", path, err)
+				continue
+			}
+
+			// Parse Markdown to HTML
+			var buf strings.Builder
+			md := goldmark.New(
+				goldmark.WithExtensions(mathjax.MathJax),
+			)
+			if err := md.Convert([]byte(textContent), &buf); err != nil {
+				fmt.Printf("Warning: failed to convert markdown for %s: %v\n", path, err)
+				continue
+			}
+			htmlContent := buf.String()
+
+			s.Cache.Files[path] = CachedFile{
+				Hash:        hash,
+				Frontmatter: fm,
+				ContentHTML: htmlContent,
+			}
+
+			project = Project{
+				Frontmatter: fm,
+				ContentHTML: template.HTML(htmlContent),
+				Slug:        slug,
+			}
+		}
+
+		s.Projects = append(s.Projects, project)
 	}
 
 	return nil
