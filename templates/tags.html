@@ -1,53 +1,24 @@
 {{ define "content" }}
-<div class="animate-in fade-in max-w-3xl mx-auto">
-    <div class="mb-10 sm:mb-12 border-b border-gray-100 dark:border-gray-800 pb-8 text-left">
-        <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-gray-900 dark:text-white mb-4">
-            Topics & Tags
-        </h1>
-        <p class="text-[1.1rem] text-gray-500 dark:text-gray-400 font-medium">Browse posts categorized by specific
+<div class="animate-in fade-in w-full max-w-[800px] mx-auto py-12 px-6">
+    <div class="mb-16">
+        <h1 class="text-4xl font-serif text-gray-900 dark:text-gray-100 mb-2">tags</h1>
+        <p class="text-[1.1rem] text-gray-500 dark:text-gray-400 font-serif">Browse posts categorized by specific
             topics.</p>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+    <ul class="flex flex-col gap-6">
         {{ range $tag, $posts := .Tags }}
-        <div
-            class="group relative bg-gray-50 dark:bg-gray-900/50 rounded-2xl p-6 border border-gray-100 dark:border-gray-800 transition-all duration-300">
-            <div class="relative z-10">
-                <div
-                    class="flex items-baseline justify-between mb-5 border-b border-gray-100 dark:border-gray-800 pb-4">
-                    <h2 class="text-2xl font-bold">
-                        <a href="/tags/{{ $tag }}.html"
-                            class="text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors before:absolute before:inset-0">
-                            #{{ $tag }}
-                        </a>
-                    </h2>
-                    <span
-                        class="inline-flex items-center justify-center bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs font-bold px-3 py-1 rounded-full">
-                        {{ len $posts }}
-                    </span>
-                </div>
-
-                <ul class="space-y-3 font-medium text-sm text-gray-600 dark:text-gray-400">
-                    {{ range $i, $post := $posts }}
-                    {{ if lt $i 3 }}
-                    <li class="flex items-start gap-2.5">
-                        <span
-                            class="mt-1.5 w-1.5 h-1.5 rounded-full bg-gray-300 dark:bg-gray-700 transition-colors shrink-0"></span>
-                        <span class="line-clamp-2 leading-relaxed">{{ .Title }}</span>
-                    </li>
-                    {{ end }}
-                    {{ end }}
-                    {{ if gt (len $posts) 3 }}
-                    <li
-                        class="pt-3 text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest flex items-center gap-2">
-                        <span class="w-8 h-px bg-gray-200 dark:bg-gray-800"></span>
-                        + more posts
-                    </li>
-                    {{ end }}
-                </ul>
-            </div>
-        </div>
+        <li class="flex items-center gap-4">
+            <a href="/tags/{{ $tag }}.html"
+                class="text-2xl font-serif text-[#0055BB] dark:text-[#66A3FF] hover:underline transition-colors">
+                #{{ $tag }}
+            </a>
+            <span
+                class="text-xs font-serif tracking-widest uppercase px-3 py-1 rounded-full bg-gray-100 dark:bg-[#111] border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400">
+                {{ len $posts }} post{{ if ne (len $posts) 1 }}s{{ end }}
+            </span>
+        </li>
         {{ end }}
-    </div>
+    </ul>
 </div>
 {{ end }}

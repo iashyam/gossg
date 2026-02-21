@@ -8,16 +8,26 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"time"
 
 	mathjax "github.com/litao91/goldmark-mathjax"
 	"github.com/yuin/goldmark"
 )
 
+func parseDateVals(dateStr string) (string, string) {
+	if t, err := time.Parse("2006-01-02", dateStr); err == nil {
+		return t.Format("2006"), t.Format("02 Jan")
+	}
+	return "", dateStr
+}
+
 // Post represents a blog post
 type Post struct {
 	parser.Frontmatter
-	ContentHTML template.HTML
-	Slug        string
+	ContentHTML  template.HTML
+	Slug         string
+	Year         string
+	MonthDayDesc string
 }
 
 // Page represents a standalone page (like about, contact)
@@ -96,10 +106,13 @@ func (s *Site) loadPosts(dir string) error {
 		if cachedFile, hit := s.Cache.Files[path]; hit && cachedFile.Hash == hash {
 			// Cache Hit: file hasn't changed, skip Lexing and Parsing
 			fmt.Printf("Cache hit: %s\n", path)
+			y, md := parseDateVals(cachedFile.Frontmatter.Date)
 			post = Post{
-				Frontmatter: cachedFile.Frontmatter,
-				ContentHTML: template.HTML(cachedFile.ContentHTML),
-				Slug:        slug,
+				Frontmatter:  cachedFile.Frontmatter,
+				ContentHTML:  template.HTML(cachedFile.ContentHTML),
+				Slug:         slug,
+				Year:         y,
+				MonthDayDesc: md,
 			}
 		} else {
 			// Cache Miss: extract, parse, and update cache
@@ -127,10 +140,13 @@ func (s *Site) loadPosts(dir string) error {
 				ContentHTML: htmlContent,
 			}
 
+			y, monthDay := parseDateVals(fm.Date)
 			post = Post{
-				Frontmatter: fm,
-				ContentHTML: template.HTML(htmlContent),
-				Slug:        slug,
+				Frontmatter:  fm,
+				ContentHTML:  template.HTML(htmlContent),
+				Slug:         slug,
+				Year:         y,
+				MonthDayDesc: monthDay,
 			}
 		}
 

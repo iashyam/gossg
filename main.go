@@ -56,11 +56,42 @@ func main() {
 		generateFile(filepath.Join("public", "posts", post.Slug+".html"), postTmpl, post)
 	}
 
-	// 7. Generate Home Page (Index)
-	generateFile("public/index.html", indexTmpl, map[string]interface{}{
-		"Title": "Home",
-		"Posts": site.Posts,
-	})
+	// 7. Generate Home Page (Index) with Pagination
+	postsPerPage := 6
+	totalPosts := len(site.Posts)
+	totalPages := (totalPosts + postsPerPage - 1) / postsPerPage
+	if totalPages == 0 {
+		totalPages = 1
+	}
+
+	for pageNum := 1; pageNum <= totalPages; pageNum++ {
+		startIdx := (pageNum - 1) * postsPerPage
+		endIdx := startIdx + postsPerPage
+		if endIdx > totalPosts {
+			endIdx = totalPosts
+		}
+
+		pagePosts := site.Posts[startIdx:endIdx]
+
+		data := map[string]interface{}{
+			"Title":       "Home",
+			"Posts":       pagePosts,
+			"CurrentPage": pageNum,
+			"TotalPages":  totalPages,
+			"PrevPage":    pageNum - 1,
+			"NextPage":    pageNum + 1,
+		}
+
+		var outputPath string
+		if pageNum == 1 {
+			outputPath = "public/index.html"
+		} else {
+			os.MkdirAll(fmt.Sprintf("public/page/%d", pageNum), 0755)
+			outputPath = fmt.Sprintf("public/page/%d/index.html", pageNum)
+		}
+
+		generateFile(outputPath, indexTmpl, data)
+	}
 
 	// 8. Generate Timeline
 	generateFile("public/timeline.html", listTmpl, map[string]interface{}{

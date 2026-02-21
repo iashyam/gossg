@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en"
+    class="antialiased text-gray-900 bg-white dark:bg-black dark:text-gray-100 selection:bg-gray-200 dark:selection:bg-gray-800">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigating Belief Bubbles in the Age of Information - The Rest Frame</title>
+
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'media',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        serif: ['"IBM Plex Serif"', 'Georgia', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+
+    
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+    <style type="text/tailwindcss">
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            @apply bg-gray-300 dark:bg-gray-700 rounded-full border-2 border-transparent bg-clip-padding;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            @apply bg-gray-400 dark:bg-gray-600;
+        }
+
+        .markdown-content h1 {
+            @apply text-4xl sm:text-5xl font-bold tracking-tight mb-8 mt-12 text-gray-900 dark:text-white;
+        }
+
+        .markdown-content h2 {
+            @apply text-2xl sm:text-3xl font-bold tracking-tight mb-6 mt-10 text-gray-900 dark:text-white;
+        }
+
+        .markdown-content h3 {
+            @apply text-xl sm:text-2xl font-semibold tracking-tight mb-4 mt-8 text-gray-900 dark:text-white;
+        }
+
+        .markdown-content p {
+            @apply text-[1.05rem] md:text-lg leading-relaxed mb-6 text-gray-800 dark:text-gray-300 text-justify;
+        }
+
+        .markdown-content a {
+            @apply text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline underline-offset-2;
+        }
+
+        .markdown-content ul {
+            @apply list-disc list-outside ml-6 mb-6 text-lg text-gray-700 dark:text-gray-300 space-y-2;
+        }
+
+        .markdown-content ol {
+            @apply list-decimal list-outside ml-6 mb-6 text-lg text-gray-700 dark:text-gray-300 space-y-2;
+        }
+
+        .markdown-content blockquote {
+            @apply border-l-4 border-gray-300 dark:border-gray-700 pl-5 pr-5 py-2 mb-8 text-lg md:text-xl text-gray-600 dark:text-gray-400 italic bg-gray-50 dark:bg-gray-900 rounded-r-lg;
+        }
+
+        .markdown-content img {
+            @apply shadow-sm my-8 mx-auto ring-1 ring-gray-200 dark:ring-gray-800;
+        }
+
+        .markdown-content code:not(pre code) {
+            @apply bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-200 px-1.5 py-0.5 rounded-md font-mono text-sm break-words;
+        }
+
+        .markdown-content pre {
+            @apply bg-[#282c34] rounded-lg shadow-sm overflow-x-auto p-4 mb-8 ring-1 ring-gray-200 dark:ring-gray-800;
+        }
+
+        .markdown-content pre code {
+            @apply text-sm leading-relaxed text-gray-300 bg-transparent p-0 border-0;
+        }
+
+         
+        .markdown-content mjx-container[display="true"] { 
+            @apply overflow-x-auto overflow-y-hidden max-w-full block py-4;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+    <header
+        class="sticky top-0 z-50 bg-white/90 dark:bg-black/90 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 transition-all">
+        <div class="max-w-4xl mx-auto px-6 py-4 flex flex-wrap justify-between items-center w-full gap-4">
+            <a href="/" class="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+                The Rest Frame
+            </a>
+            <nav class="flex gap-6 text-[0.9rem] font-medium text-gray-500 dark:text-gray-400">
+                <a href="/" class="hover:text-gray-900 dark:hover:text-white transition-colors">Home</a>
+                <a href="/timeline.html"
+                    class="hover:text-gray-900 dark:hover:text-white transition-colors">Timeline</a>
+                <a href="/tags.html" class="hover:text-gray-900 dark:hover:text-white transition-colors">Tags</a>
+                <a href="/about.html" class="hover:text-gray-900 dark:hover:text-white transition-colors">About</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow w-full max-w-4xl mx-auto px-6 py-12 sm:py-16">
+        
+<article class="animate-in fade-in">
+    <header class="mb-10 sm:mb-14 text-left max-w-3xl mx-auto">
+        <h1
+            class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight mb-6 text-gray-900 dark:text-white leading-tight">
+            Navigating Belief Bubbles in the Age of Information
+        </h1>
+
+        <div class="flex flex-wrap items-center gap-4 text-sm font-semibold text-gray-500 dark:text-gray-400">
+            <time datetime="2026-02-19" class="flex items-center gap-1.5">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                    </path>
+                </svg>
+                2026-02-19
+            </time>
+
+            
+            <div class="hidden sm:block text-gray-300 dark:text-gray-600">•</div>
+            <div class="flex flex-wrap gap-2">
+                
+                <a href="/tags/artilce.html"
+                    class="inline-flex items-center text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+                    #artilce
+                </a>
+                
+                <a href="/tags/philosophy.html"
+                    class="inline-flex items-center text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+                    #philosophy
+                </a>
+                
+            </div>
+            
+
+            <div class="hidden sm:block text-gray-300 dark:text-gray-600">•</div>
+            <div class="flex items-center gap-1.5 text-gray-600 dark:text-gray-300">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                Shyam Sunder
+            </div>
+        </div>
+    </header>
+
+    
+    <div class="max-w-4xl mx-auto mb-10 sm:mb-14">
+        <img src="/assets/belief_bubble.jpg" alt="Navigating Belief Bubbles in the Age of Information" class="w-full h-auto object-cover rounded-lg">
+    </div>
+    
+
+    <hr class="my-8 border-gray-100 dark:border-gray-800/80">
+
+    <div class="markdown-content max-w-[85ch] mx-auto text-[1.05rem] md:text-lg">
+        <p>How many times have you had a heated discussion with your friend or colleague and felt like they have been brainwashed? How many times have you been left frustrated thinking why the other person is so unaware of social injustice? Why are they being such an <em>andhbhakt</em>? And how many times have you thought that it might have been you who has been brainwashed?</p>
+<h2>What are belief bubbles?</h2>
+<p>Before we start discussing belief bubbles, I want to talk about <em>conformation bias</em>. It's a known fact that we tend to seek the information which aligns with our existing beliefs and ignore the facts that go directly against them. This is called conformation bias. For example, when we come across something good about the ruling party, we genuinely believe it; however, if something against it pops up, we tend to dismiss it, saying it’s propaganda from the opposition.</p>
+<p>We tend to mingle more with people who share our beliefs and distance ourselves from those who don't. And if we find something that directly challenges our preexisting norm, we become uncomfortable. This is called cognitive dissonance (this might not be the correct definition. Psychologists, please spare me.)</p>
+<p>Social media algorithms amplify the conformation bias. These platforms are designed to maximise the time you spend on them. And in doing so, they detect your beliefs by your interactions, and after that, they will only show content that aligns with your belief system, so that you engage with it more. It filters out the information that might cause cognitive dissonance and mental discomfort when dealing with it. So it is also named <strong>Filter Bubble</strong> sometimes.</p>
+<blockquote>
+<p>your filter bubble is your own personal, unique universe of information that you live in online. And what’s in your filter bubble depends on who you are, and it depends on what you do. But the thing is that you don’t decide what gets in. And more importantly, you don’t actually see what gets edited out.</p>
+<p>~ Eli Pariser, Beware online: Filter Bubbles</p>
+</blockquote>
+<p>After continuous exposure to such content, your beliefs become stronger and stronger. For example, if you believe that the government is bad, then your feed will only show you bad things about the government, and you will be convinced that the government can never do anything wrong, and vice versa. It can take your beliefs from mild interest to extremes in a matter of reels.</p>
+<p>The impact is severe on a mass scale. If the whole of a community is addicted to content consumption on social media, then society will become polarised very soon.</p>
+<h2>The Problem with belief bubbles</h2>
+<ul>
+<li><strong>Overestimation of the prevalence of our beliefs and losing grip on reality</strong> is one of the most visible effects on these belief bubbles. Especially when people aren't aware of the algorithm, they will think that everyone <em>actually</em> thinks in the same way. Which makes them feel like their beliefs are more prominent than they actually are.</li>
+</ul>
+<blockquote>
+<p>In addition, one of the biggest issues of filter bubbles is they are invisible, and people don’t realize that they are seeing something different than everyone else. This leads them to believe that their opinion must be right, because all they see is their side and they assume everyone else is seeing that too.</p>
+<p>~<a href="https://medium.com/@10797952?source=post_page---byline--df6c5cbf919f---------------------------------------">Kristen Allred</a></p>
+</blockquote>
+<ul>
+<li>Once a person said to me that the government is going to shut down schools and make education online for everyone because in every other school, a teacher is accused of sexual harassment. It made me sad beyond words.</li>
+</ul>
+<blockquote>
+<p>The term <em>Doom Scrolling</em> is related to the <em>Doomsday Effect</em>. People who click more on negative news are shown more negative news and eventually become convinced that doomsday is coming.</p>
+</blockquote>
+<ul>
+<li>Polarisation &amp; Lack of empathy. Filter bubbles communicated through social media can result in polarisation because the beliefs of people will be taken to the extreme. But the even more dangerous impact is that it can propagate the 'us' vs 'them' formalism. It will widen the gap between 'us' and them which can result in dangerous consequences.</li>
+<li><strong>A narrower viewpoint prevents us from gaining new knowledge</strong>. Social media is designed to show us only one side of the coin which can never be the whole and true knowledge. The reels from the opposite side make us feel uncomfortable and we tend to ignore and skip them rather than take the effort to analyse and gather knowledge from them.</li>
+</ul>
+<h2>How to navigate belief bubbles without being 'brainwashed'</h2>
+<ul>
+<li><strong>First, you should voluntarily expose yourself to the contrary belief</strong>. If you are an atheist, then you should unfollow your favourite creators and start listening to the arguments from people like William Lane Craig. These arguments are going to make you uncomfortable, but instead of skipping over or laughing it off. You should really put your beliefs to the test. You should defend your conventions and try to come up with counterarguments. I again want to paraphrase Derek Muller, paraphrasing Popper:</li>
+</ul>
+<blockquote>
+<p>The only way to prove something is to try as hard as you can to disprove it.</p>
+</blockquote>
+<ul>
+<li>My friend <a href="https://vkj-here.blogspot.com">Vinod Jiani</a> once told me that to make sure he doesn't fall into fanboy culture, he tries to read criticism of the author he likes the most. At the time, he was reading why Yuvalian’s narrative of history is problematic. I think we all should try to find flaws in our heroes.</li>
+<li>I think that we should try to <strong>consume knowledge in its rawest form</strong>. This way, we can eliminate the fight on interpretation and come up with our own strongly backed belief. Which means that instead of consuming content on social media, we should read books, reports, and documentaries, do our own research to gain knowledge. Instead of watching popular God-debunked-with-science videos, we should take university courses on religious philosophy. And read the god-damned scriptures.</li>
+<li>We should participate more in debates and try to gain knowledge through dialogues (which is called <em>The Socratic Method</em>). But we shouldn't enter a debate trying to win the argument but trying to learn something from the other person. It's highly unlikely that a debate might change your perspective, but we should observe ourselves if we are able to come up with counterarguments and defend our beliefs. It will show us if they are strongly rooted. And hence we can burst the belief bubble.</li>
+<li>My best advice is don't use social media. Stay away from it. Enjoy your life offline.</li>
+</ul>
+<h2>Conclusion</h2>
+<p>It is said that a life unexamined is a life not worth living. As a professional rest-framer, I often think about how we can understand different frames of reference better. And my personal experience is that the filter bubble from social media makes us lean towards one point of view and hold others. But as an AI enthusiast, I know how these things work and I know that they can be altered to fit my choices. Filter bubbles are dangerous and they have dangerous consequences, but just knowing that they exist is one big caution to make sure that you won't fall for them. And I have tried to achieve that in my post.</p>
+<h2>References</h2>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=B8ofWFx525s">Beware online &quot;filter bubbles&quot; - Eli Pariser</a></li>
+<li><a href="https://longevitygains.com/belief-bubbles-how-to-avoid-the-worldview-backfire-effect/">The Problem With Social Media Reinforcement Bubbles</a></li>
+<li><a href="https://medium.com/data-and-beyond/how-filter-bubbles-are-biasing-your-opinions-on-social-media-9469b940154">How Filter Bubbles are biasing your opinions of social media</a></li>
+<li><a href="https://arxiv.org/html/2307.01221">Study on existence of filter bubbles in modern recommendation systems.</a></li>
+<li><a href="https://medium.com/@10797952/the-causes-and-effects-of-filter-bubbles-and-how-to-break-free-df6c5cbf919f">The Causes and Effects of “Filter Bubbles” and how to Break Free￼</a></li>
+</ul>
+
+    </div>
+</article>
+
+    </main>
+
+    <footer class="py-10 border-t border-gray-100 dark:border-gray-900 mt-auto text-center">
+        <div class="max-w-4xl mx-auto px-6">
+            <p class="text-[0.8rem] text-gray-400 dark:text-gray-500">
+                &copy; 2026 The Rest Frame.
+            </p>
+        </div>
+    </footer>
+</body>
+
+</html>
