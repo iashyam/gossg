@@ -17,11 +17,10 @@
                 No image available</div>
             {{ end }}
         </a>
-        <div class="flex flex-col justify-center p-6 sm:p-8 md:p-10">
+        <div class="flex flex-col justify-center p-5 sm:p-6 md:p-8">
             <time class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-3 block">{{
                 $latest.Date }} · Latest</time>
-            <h2
-                class="text-2xl sm:text-3xl md:text-4xl font-black text-gray-900 dark:text-gray-100 leading-[1.15] mb-5">
+            <h2 class="text-2xl sm:text-3xl font-black text-gray-900 dark:text-gray-100 leading-[1.15] mb-4">
                 <a href="/posts/{{ $latest.Slug }}.html"
                     class="before:absolute before:inset-0 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{{
                     $latest.Title }}</a>
@@ -38,8 +37,8 @@
     </article>
     {{ end }}
 
-    <div class="mb-8 flex items-end justify-between border-b border-gray-100 dark:border-gray-800 pb-4">
-        <h3 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Recent Articles</h3>
+    <div class="mb-6 flex items-end justify-between border-b border-gray-100 dark:border-gray-800 pb-3">
+        <h3 class="text-xl font-bold tracking-tight text-gray-900 dark:text-white">Recent Articles</h3>
         <a href="/timeline.html"
             class="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">View
             All &rarr;</a>
@@ -64,10 +63,10 @@
                 {{ end }}
             </a>
 
-            <div class="flex flex-col flex-grow p-6 sm:p-8 relative z-10 bg-white dark:bg-gray-900">
-                <time class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-3 block">{{
+            <div class="flex flex-col flex-grow p-5 sm:p-6 relative z-10 bg-white dark:bg-gray-900">
+                <time class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2 block">{{
                     .Date }}</time>
-                <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100 leading-tight">
+                <h2 class="text-xl font-bold mb-3 text-gray-900 dark:text-gray-100 leading-tight">
                     <a href="/posts/{{ .Slug }}.html" class="before:absolute before:inset-0">{{ .Title }}</a>
                 </h2>
 

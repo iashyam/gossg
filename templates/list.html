@@ -1,7 +1,7 @@
 {{ define "content" }}
 <div class="animate-in fade-in w-full max-w-[800px] mx-auto py-12 px-6">
-    <div class="mb-16">
-        <h1 class="text-4xl font-serif text-gray-900 dark:text-gray-100 mb-2">posts</h1>
+    <div class="mb-14">
+        <h1 class="text-3xl sm:text-4xl font-serif text-gray-900 dark:text-gray-100 mb-2">posts</h1>
     </div>
 
     <div class="relative">
@@ -14,9 +14,10 @@
             {{ if ne .Year $currentYear }}
             {{ $currentYear = .Year }}
             <!-- Year Entry -->
-            <div class="relative flex items-center group">
-                <div class="absolute left-0 sm:left-0 w-32 sm:text-right pr-6 sm:pr-8">
-                    <span class="text-[1.35rem] text-gray-800 dark:text-gray-200 font-serif">{{ .Year }}</span>
+            <div class="relative flex items-center group py-2 sm:py-0">
+                <div class="pl-6 sm:pl-0 sm:absolute sm:left-0 w-full sm:w-32 sm:text-right pr-6 sm:pr-8">
+                    <span class="text-xl sm:text-[1.35rem] text-gray-800 dark:text-gray-200 font-serif">{{ .Year
+                        }}</span>
                 </div>
                 <!-- Hollow circle -->
                 <div
@@ -41,7 +42,7 @@
                     <time
                         class="sm:hidden text-xs text-gray-500 dark:text-gray-400 font-serif tracking-wide block mb-1">{{
                         .Date }}</time>
-                    <h2 class="text-[1.15rem] leading-snug">
+                    <h2 class="text-lg sm:text-[1.15rem] leading-snug">
                         <a href="/posts/{{ .Slug }}.html"
                             class="text-[#0055BB] dark:text-[#66A3FF] hover:underline font-serif tracking-wide">
                             {{ .Title }}
