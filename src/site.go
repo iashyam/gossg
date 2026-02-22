@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"gossg/parser"
+	"gossg/src/parser"
 	"html/template"
 	"os"
 	"path/filepath"

@@ -5,7 +5,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"gossg/parser"
+	"gossg/src/parser"
 	"os"
 )
 
