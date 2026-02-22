@@ -119,11 +119,11 @@ goSSG is built perfectly to be automated via GitHub Actions for seamless deploym
            with:
              go-version: '1.21'
 
-         - name: Build gossg
-           run: go build -o gossg
+         - name: Install gossg
+           run: go install github.com/iashyam/gossg@latest
              
          - name: Generate Static Site
-           run: ./gossg
+           run: gossg
              
          - name: Deploy to GitHub Pages
            uses: peaceiris/actions-gh-pages@v3
