@@ -87,3 +87,48 @@ If you would like to customize the colors, structure, or HTML of the website, yo
    go install .
    ```
 4. Now, running `gossg` on your machine will use your customized embedded templates!
+
+## Publishing to GitHub Pages
+
+goSSG is built perfectly to be automated via GitHub Actions for seamless deployment to GitHub Pages.
+
+1. **Configure your URL**: Ensure your `config.yaml` uses your GitHub Pages URL:
+   ```yaml
+   baseURL: "https://username.github.io/repo"
+   ```
+2. **Setup the Workflow**: Create a `.github/workflows/deploy.yml` file in your repository:
+   ```yaml
+   name: Deploy goSSG to GitHub Pages
+
+   on:
+     push:
+       branches: ["main"]
+
+   permissions:
+     contents: write
+
+   jobs:
+     build-and-deploy:
+       runs-on: ubuntu-latest
+       steps:
+         - name: Checkout Code
+           uses: actions/checkout@v4
+
+         - name: Setup Go
+           uses: actions/setup-go@v4
+           with:
+             go-version: '1.21'
+
+         - name: Build gossg
+           run: go build -o gossg
+             
+         - name: Generate Static Site
+           run: ./gossg
+             
+         - name: Deploy to GitHub Pages
+           uses: peaceiris/actions-gh-pages@v3
+           with:
+             github_token: ${{ secrets.GITHUB_TOKEN }}
+             publish_dir: ./public
+   ```
+3. **Configure Pages Setting**: In your repository Settings -> Pages, set the source to deploy from the `gh-pages` branch. Every time you push to `main`, GitHub Actions will build your goSSG site and deploy it automatically!
