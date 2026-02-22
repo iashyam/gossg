@@ -9,7 +9,7 @@
     <ul class="flex flex-col gap-6">
         {{ range $tag, $posts := .Tags }}
         <li class="flex items-center gap-4">
-            <a href="{{ url (print " /tags/" $tag ".html" ) }}"
+            <a href="{{ url (print "/tags/" $tag ".html" ) }}"
                 class="text-2xl font-serif text-[#0055BB] dark:text-[#66A3FF] hover:underline transition-colors">
                 #{{ $tag }}
             </a>

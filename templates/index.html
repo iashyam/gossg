@@ -7,10 +7,10 @@
     {{ $latest := index .Posts 0 }}
     <article
         class="group relative flex flex-col mb-12 md:mb-16 rounded-3xl overflow-hidden shadow-sm dark:shadow-none bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 transition-shadow duration-500">
-        <a href="{{ url (print " /posts/" $latest.Slug ".html" ) }}"
+        <a href="{{ url (print "/posts/" $latest.Slug ".html" ) }}"
             class="block w-full aspect-video sm:aspect-[2/1] md:aspect-[2.5/1] relative overflow-hidden bg-gray-100 dark:bg-gray-800">
             {{ if $latest.Image }}
-            <img src="{{ url (print " /" $latest.Image) }}" alt="{{ $latest.Title }}"
+            <img src="{{ url (print "/" $latest.Image) }}" alt="{{ $latest.Title }}"
                 class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 md:group-hover:scale-105">
             {{ else }}
             <div class="absolute inset-0 flex items-center justify-center text-gray-400 dark:text-gray-600 font-medium">
@@ -21,7 +21,7 @@
             <time class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-3 block">{{
                 $latest.Date }} · Latest</time>
             <h2 class="text-2xl sm:text-3xl font-black text-gray-900 dark:text-gray-100 leading-[1.15] mb-4">
-                <a href="{{ url (print " /posts/" $latest.Slug ".html" ) }}"
+                <a href="{{ url (print "/posts/" $latest.Slug ".html" ) }}"
                     class="before:absolute before:inset-0 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{{
                     $latest.Title }}</a>
             </h2>
@@ -51,10 +51,10 @@
         <!-- Standard Posts -->
         <article
             class="group relative flex flex-col bg-white dark:bg-gray-900 rounded-3xl overflow-hidden border border-gray-100 dark:border-gray-800 transition-all duration-300">
-            <a href="{{ url (print " /posts/" .Slug ".html" ) }}"
+            <a href="{{ url (print "/posts/" .Slug ".html" ) }}"
                 class="block aspect-[16/10] sm:aspect-video relative overflow-hidden bg-gray-100 dark:bg-gray-800">
                 {{ if .Image }}
-                <img src="{{ url (print " /" .Image) }}" alt="{{ .Title }}"
+                <img src="{{ url (print "/" .Image) }}" alt="{{ .Title }}"
                     class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 md:group-hover:scale-105">
                 {{ else }}
                 <div
@@ -67,13 +67,13 @@
                 <time class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2 block">{{
                     .Date }}</time>
                 <h2 class="text-xl font-bold mb-3 text-gray-900 dark:text-gray-100 leading-tight">
-                    <a href="{{ url (print " /posts/" .Slug ".html" ) }}" class="before:absolute before:inset-0">{{
+                    <a href="{{ url (print "/posts/" .Slug ".html" ) }}" class="before:absolute before:inset-0">{{
                         .Title }}</a>
                 </h2>
 
                 <div class="flex flex-wrap gap-x-3 gap-y-2 mt-auto relative z-20">
                     {{ range .Tags }}
-                    <a href="{{ url (print " /tags/" . ".html" ) }}"
+                    <a href="{{ url (print "/tags/" . ".html" ) }}"
                         class="inline-flex items-center text-xs font-bold bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-3 py-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors">
                         #{{ . }}
                     </a>
@@ -109,7 +109,7 @@
 
         <div>
             {{ if lt .CurrentPage .TotalPages }}
-            <a href="{{ url (print " /page/" .NextPage "/index.html" ) }}"
+            <a href="{{ url (print "/page/" .NextPage "/index.html" ) }}"
                 class="px-5 py-2.5 border border-gray-200 dark:border-gray-800 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors font-semibold text-sm text-gray-700 dark:text-gray-300">
                 Next &rarr;
             </a>
