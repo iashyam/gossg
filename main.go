@@ -19,10 +19,24 @@ type Config struct {
 
 func loadConfig() Config {
 	var cfg Config
+
+	// try .yaml first
 	data, err := os.ReadFile("config.yaml")
-	if err == nil {
-		yaml.Unmarshal(data, &cfg)
+	if err != nil {
+		// fallback to .yml
+		data, err = os.ReadFile("config.yml")
 	}
+
+	if err == nil {
+		if err := yaml.Unmarshal(data, &cfg); err != nil {
+			fmt.Printf("Warning: Failed to parse config file: %v\n", err)
+		} else {
+			fmt.Printf("Loaded config with BaseURL: %s\n", cfg.BaseURL)
+		}
+	} else {
+		fmt.Println("Warning: No config.yaml or config.yml found. Using default paths.")
+	}
+
 	cfg.BaseURL = strings.TrimSuffix(cfg.BaseURL, "/")
 	return cfg
 }
