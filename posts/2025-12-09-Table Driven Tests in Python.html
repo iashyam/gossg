@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en"
+    class="antialiased text-gray-900 bg-white dark:bg-black dark:text-gray-100 selection:bg-gray-200 dark:selection:bg-gray-800">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Driven Tests in Python - The Rest Frame</title>
+
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'media',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        serif: ['"IBM Plex Serif"', 'Georgia', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+
+    
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+    <style type="text/tailwindcss">
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            @apply bg-gray-300 dark:bg-gray-700 rounded-full border-2 border-transparent bg-clip-padding;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            @apply bg-gray-400 dark:bg-gray-600;
+        }
+
+        .markdown-content h1 {
+            @apply text-3xl sm:text-4xl font-bold tracking-tight mb-8 mt-12 text-gray-900 dark:text-white;
+        }
+
+        .markdown-content h2 {
+            @apply text-xl sm:text-2xl font-bold tracking-tight mb-6 mt-10 text-gray-900 dark:text-white;
+        }
+
+        .markdown-content h3 {
+            @apply text-lg sm:text-xl font-semibold tracking-tight mb-4 mt-8 text-gray-900 dark:text-white;
+        }
+
+        .markdown-content p {
+            @apply text-[1rem] md:text-[1.05rem] leading-relaxed mb-6 text-gray-800 dark:text-gray-300 text-justify;
+        }
+
+        .markdown-content a {
+            @apply text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline underline-offset-2;
+        }
+
+        .markdown-content ul {
+            @apply list-disc list-outside ml-6 mb-6 text-base md:text-lg text-gray-700 dark:text-gray-300 space-y-2;
+        }
+
+        .markdown-content ol {
+            @apply list-decimal list-outside ml-6 mb-6 text-base md:text-lg text-gray-700 dark:text-gray-300 space-y-2;
+        }
+
+        .markdown-content blockquote {
+            @apply border-l-4 border-gray-300 dark:border-gray-700 pl-5 pr-5 py-2 mb-8 text-base md:text-lg text-gray-600 dark:text-gray-400 italic bg-gray-50 dark:bg-gray-900 rounded-r-lg;
+        }
+
+        .markdown-content img {
+            @apply shadow-sm my-8 mx-auto ring-1 ring-gray-200 dark:ring-gray-800;
+        }
+
+        .markdown-content code:not(pre code) {
+            @apply bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-200 px-1.5 py-0.5 rounded-md font-mono text-sm break-words;
+        }
+
+        .markdown-content pre {
+            @apply bg-[#282c34] rounded-lg shadow-sm overflow-x-auto p-4 mb-8 ring-1 ring-gray-200 dark:ring-gray-800;
+        }
+
+        .markdown-content pre code {
+            @apply text-sm leading-relaxed text-gray-300 bg-transparent p-0 border-0;
+        }
+
+         
+        .markdown-content mjx-container[display="true"] { 
+            @apply overflow-x-auto overflow-y-hidden max-w-full block py-4;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+    <header
+        class="sticky top-0 z-50 bg-white/90 dark:bg-black/90 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 transition-all">
+        <div class="max-w-4xl mx-auto px-6 py-4 flex flex-wrap justify-between items-center w-full gap-4">
+            <a href="/" class="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+                The Rest Frame
+            </a>
+            <nav class="flex gap-6 text-[0.9rem] font-medium text-gray-500 dark:text-gray-400">
+                <a href="/" class="hover:text-gray-900 dark:hover:text-white transition-colors">Home</a>
+                <a href="/timeline.html"
+                    class="hover:text-gray-900 dark:hover:text-white transition-colors">Timeline</a>
+                <a href="/projects.html"
+                    class="hover:text-gray-900 dark:hover:text-white transition-colors">Projects</a>
+                <a href="/tags.html" class="hover:text-gray-900 dark:hover:text-white transition-colors">Tags</a>
+                <a href="/about.html" class="hover:text-gray-900 dark:hover:text-white transition-colors">About</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow w-full max-w-4xl mx-auto px-6 py-12 sm:py-16">
+        
+<article class="animate-in fade-in">
+    <header class="mb-10 sm:mb-14 text-left max-w-3xl mx-auto">
+        <h1
+            class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-5 text-gray-900 dark:text-white leading-tight">
+            Table Driven Tests in Python
+        </h1>
+
+        <div class="flex flex-wrap items-center gap-4 text-sm font-semibold text-gray-500 dark:text-gray-400">
+            <time datetime="2025-12-07" class="flex items-center gap-1.5">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                    </path>
+                </svg>
+                2025-12-07
+            </time>
+
+            
+            <div class="hidden sm:block text-gray-300 dark:text-gray-600">•</div>
+            <div class="flex flex-wrap gap-2">
+                
+                <a href="/tags/programming.html"
+                    class="inline-flex items-center text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+                    #programming
+                </a>
+                
+            </div>
+            
+
+            <div class="hidden sm:block text-gray-300 dark:text-gray-600">•</div>
+            <div class="flex items-center gap-1.5 text-gray-600 dark:text-gray-300">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                Shyam Sunder
+            </div>
+        </div>
+    </header>
+
+    
+    <div class="max-w-4xl mx-auto mb-10 sm:mb-14">
+        <img src="/assets/table_driven_tests.jpg" alt="Table Driven Tests in Python" class="w-full h-auto object-cover rounded-lg">
+    </div>
+    
+
+    <hr class="my-8 border-gray-100 dark:border-gray-800/80">
+
+    <div class="markdown-content max-w-[85ch] mx-auto text-[1rem] md:text-[1.05rem]">
+        <p>Most, if not all, of the times, you know what any function in your program should do. You know what the inputs and outputs looks like. You know that even before you start thinking about writing the function. After writing the function, you check it with bunch of example inputs to see if it puts up to your expectations. Unit tests basically do the same.</p>
+<p>My approach to unit testing has remained more or less the same since I started writing them. But when I started learning go programming language, I came across this really simplistic, elegant and beautiful way to write unit test. They call it Table Driven testing, read <a href="https://go.dev/doc/tutorial/add-a-test">more here</a>. Read more about test in go at here.</p>
+<h2>Why Should We Write Tests?</h2>
+<p>There is no particular answer to why would you want to write tests? But there are far too many benefits to ignore writing tests.</p>
+<ul>
+<li>Tests let's you check your code's intended behavior.</li>
+<li>Tests acts as documentation for your code's intended behavior.</li>
+<li>Tests makes debugging easier by pinpointing the issue.</li>
+<li>Tests makes collaboration easier by giving confidence in teammates code.</li>
+<li>Tests make code reviews easier, if tests Fails, you can just reject PR.</li>
+</ul>
+<p>I can go on writing this list for the whole of this post but that's not the point of this pots. The point of this post is to</p>
+<h2>Simple Unit Tests</h2>
+<p>Let's say we are writing a function that <em>simplifies</em> a string, meaning that it removes all the punctuation and trailing white spaces and converts it into lowercase. I would write a small python function to achieve that:</p>
+<pre><code class="language-python">
+def simplify(s: str) -&gt; str:
+    '''remove punctuations and make lowercase for a string'''
+    
+    punctuation = '''!&quot;#$%&amp;\'()*+,-./:;&lt;=&gt;?@[\\]^_`{|}~'''
+    trans_map = s.maketrans({p:&quot;&quot; for p in punctuation})
+    
+    #remove punctuation
+    s = s.translate(trans_map)
+    
+    # remove trailing whitespaces
+    s = s.strip()
+    
+    # lowercase
+    s = s.lower()
+
+    return s
+</code></pre>
+<p>To test this simple function, I would write a simple unit test using python's <code>pytest</code> library. You can learn more about the pytest library <a href="https://pytest.org/">here</a></p>
+<pre><code class="language-python">import pytest
+def test_simplify():
+
+	inputs = &quot;Boots the bear!&quot;
+	outputs = &quot;boots the bear&quot;
+	function_output = simplify(input)
+	
+	assert function_output == outputs
+</code></pre>
+<p>I used to write test like that when I was kid. But that does the job. See I have used <code>inputs</code> as a variable even though it's singular because <code>input</code> in python is a keyword (<code>in</code> is also a keyword in python). While we can use <code>input</code> as a variable but if then try to use it a keyword, it might cause a problem. Another convention is to use <code>inputs_</code> with an underscore. But either way is fine.</p>
+<p>This works well for one input, but if wan to test for multiple cases, we can do scale it using a dictionary.</p>
+<pre><code class="language-python">
+def test_simplify():
+
+    test_cases = [
+        {
+            &quot;inputs&quot;: &quot;Boots the bear!&quot;,
+            &quot;want&quot;: &quot;boots the bear&quot;,
+        },
+        {
+            &quot;inputs&quot;: &quot;The wonderful bear, Boots &quot;,
+            &quot;want&quot;: &quot;the wonderful bear boots&quot;,
+        },
+        {
+			&quot;inputs&quot;: &quot;&quot;,
+			&quot;want&quot;: &quot;&quot;,
+		},
+
+		{
+			&quot;inputs&quot;: &quot;.......&quot;,
+			&quot;want&quot;: &quot;&quot;,
+		},
+    ]
+
+    for test_case in test_cases:
+        got = simplify(test_case[&quot;inputs&quot;])
+        assert got == test_case[&quot;want&quot;], f&quot;{test_case[&quot;want&quot;]=}, {got=} &quot;
+</code></pre>
+<p>This is beautiful, with this we can test can test a few edge cases and determine if our code holds up to them before it crashes in the production level. We can run these test cases using <code>pytest</code> in our command line:</p>
+<pre><code class="language-bash">shyam@laptop: pytest
+platform linux -- Python 3.13.5, pytest-8.3.4, pluggy-1.5.0
+rootdir: /home/shyam/github/whateverproject
+plugins: anyio-4.7.0
+collected 4 items                                                                 
+
+tests.py .....                                                   [100%]
+
+==================== 1 passed in 0.01s =====================
+</code></pre>
+<p>Everything passes. And that's beautiful. But we can do a little more here. Sometimes we know that the test will fail in certain cases, we expect some error, and if our test is bypassing these errors then that might a bad sign. We want to detect that early. So we write a error prone test just to test it out.</p>
+<pre><code class="language-python">def test_simplify():
+
+
+    test_cases = [
+        {
+            &quot;args&quot;: &quot;Boots the bear!&quot;,
+            &quot;want&quot;: &quot;boots the bear&quot;,
+            &quot;want_error&quot;: False
+        },
+        {
+            &quot;args&quot;: &quot;The wonderful bear, Boots &quot;,
+            &quot;want&quot;: &quot;the wonderful bear boots&quot;,
+            &quot;want_error&quot;: False
+        },
+        {
+            &quot;args&quot;: 23,
+            &quot;kwargs&quot;: {},
+            &quot;want&quot;: &quot;the wonderful bear, boots&quot;,
+            &quot;want_error&quot;: True
+        },
+    ]
+
+    for test_case in test_cases:
+        if test_case[&quot;want_error&quot;]:
+            flag = False
+            try: 
+                got = simplify(test_case[&quot;args&quot;])
+            except:
+                flag = True
+            assert flag , f&quot;Wanted an error but got none&quot;
+            continue
+        got = simplify(test_case[&quot;inputs&quot;])
+        assert got == test_case[&quot;want&quot;], f&quot;{test_case[&quot;want&quot;]=}, {got=} &quot;
+
+</code></pre>
+<p>Now we are talking. There we can see that if we get an integer instead of a string, the programs should fall apart and if it doesn't then something fishy is surely going on.</p>
+<p>Now we are heading towards table driven testing. You can notice that the <code>test_cases</code> variable looks like a <code>json</code> file. It can be saved alone as json, and can also be made as a table. That's why we are calling it table driven tests. We can abstract a few thing out of here.</p>
+<p>You see that the bottom part of testing logic will basically be the same for all the functions we want to test. So I can write it in a separate function:</p>
+<pre><code class="language-python">import ast
+def RUN(function: ast.FunctionDef , test_cases: list[dict]):
+
+    for test_case in test_cases:
+
+        if &quot;kwargs&quot; not in test_case.keys(): test_case[&quot;kwargs&quot;]={}
+        if &quot;want_error&quot; not in test_case.keys(): test_case[&quot;want_error&quot;]=False
+
+        if test_case[&quot;want_error&quot;]:
+            flag = False
+            try: 
+                got = function(*test_case[&quot;args&quot;], **test_case[&quot;kwargs&quot;])
+            except:
+                flag = True
+            assert flag , f&quot;Wanted an error but got none&quot;
+            return
+
+        got = function(*test_case[&quot;args&quot;], **test_case[&quot;kwargs&quot;])
+        assert got == test_case[&quot;want&quot;], f&quot;{test_case[&quot;want&quot;]=}, {got=} &quot;
+</code></pre>
+<p>This <code>RUN</code> will run test cases for all the functions for a bunch of testing pairs. And the logic even simplifies now:</p>
+<pre><code class="language-python">def test_simplify():
+
+
+    test_cases = [
+        {
+            &quot;args&quot;: [&quot;Boots the bear!&quot;],
+            &quot;want&quot;: &quot;boots the bear&quot;,
+            &quot;want_error&quot;: False
+        },
+        {
+            &quot;args&quot;: [&quot;The wonderful bear, Boots &quot;],
+            &quot;want&quot;: &quot;the wonderful bear boots&quot;,
+            &quot;want_error&quot;: False
+        },
+        {
+            &quot;args&quot;: [23],
+            &quot;kwargs&quot;: {},
+            &quot;want&quot;: &quot;the wonderful bear, boots&quot;,
+            &quot;want_error&quot;: True
+        },
+    ]
+
+    RUN(mod.simplify, test_cases)
+</code></pre>
+<p>Now this looks really simple and beautiful.</p>
+<blockquote>
+<p>==NOTE==: <code>args</code> is not a simple string anymore, it's a list. (Well technically they should the tuple.) You might make that mistake so keep that in your mind.</p>
+</blockquote>
+<p>This is not really a well written <code>RUN</code> function because it doesn't specify the kind of exception we are looking for it just looks for an error to pass the test. So if the error is because of a different reason, our test will still pass. That could be dangerous as well. So ideally we should include that Exception too in our tables.</p>
+<pre><code class="language-python">test_Case = {
+            &quot;args&quot;: [&quot;Boots the bear!&quot;],
+            &quot;want&quot;: &quot;boots the bear&quot;,
+            &quot;want_error&quot;: False
+            &quot;exception&quot;: AttributeError
+        },
+</code></pre>
+<p>And we should update our <code>RUN</code> function appropriately, we will do that shortly. Before that we need to address the lots of if blocks in there.</p>
+<p>Golang handles these test cases by making a struct of example cases. We don't have structs in python. The closest thing to a struct in python is a <code>dataclass</code>. We will define the test <code>dataclass</code> as the following:</p>
+<pre><code class="language-python">from dataclasses import dataclass, field
+from typing import Any, Callable, Type, Tuple
+
+@dataclass
+class Case:
+    #inputs
+    args: Tuple[Any, ...]
+    want: Any | Tuple[Any] | None = None
+
+    kwargs: dict[str, Any] | None = field(default_factory=dict)
+    exception: Type[Exception] | Tuple[Type[Exception], ...] = Exception
+    want_error: bool = False
+    name: str | None = None
+</code></pre>
+<p>At first glance, this might look a lot more complicated then our simple list of dictionaries but we aren't doing much here then defining the datatypes of the same variables. There are <code>args</code> as the list (tuple) of <code>Any</code>(which means literally any type). The want argument is an <code>Any</code> <code>|</code> (this pipe means <code>or</code>) tuple because there can be multiple outputs, and in Python, they are stored as tuples. (Here we have an edge over golang.) <code>kwargs</code> is called keyword arguments. They are like named arguments in a function. The optional type for that was suggest by GPT after a lot of debugging.</p>
+<p>The <code>exception</code> field is the most interesting one. Since Exception doesn't have a build in type in python, we have used <code>Type</code> to convert. It can also be a tuple. See the default value I have written is literal Exception. That was my intuition because when we have a particular exception while using the <code>try-except</code> block, we use that otherwise we do something akin to:</p>
+<pre><code class="language-python">try:
+    f(1,0)
+except Exception:
+    print(&quot;Something&quot;)
+</code></pre>
+<p>Now we can simplify the run function:</p>
+<pre><code class="language-python">def RUN(function: Callable, test_cases: list[Case]):
+
+    for test_case in test_cases:
+        if test_case.want_error:
+            with pytest.raises(test_case.exception):
+                function(*test_case.args, **test_case.kwargs)
+        else:
+            got = function(*test_case.args, **test_case.kwargs)
+            assert got == test_case.want, f&quot;{test_case.want=}, {got=} &quot;
+</code></pre>
+<p>That is very concise and beautiful. We have used <code>pytest.raises</code> context protocol. This will call the function inside the protocol. If the exception passed here is raised during execution, the test passes, if this exception isn't raised or some other exception is raised then the test fails. If we aren't expecting any error, we will just go and compare the outputs. Now we need to pass in the list of <code>Case</code> objects instead of dictionaries, so I have done that in a following way:</p>
+<pre><code class="language-python">def test_simplify():
+
+    test_cases = [
+        {
+            &quot;args&quot;: [&quot;Boots the bear!&quot;],
+            &quot;want&quot;: &quot;boots the bear&quot;,
+        },
+        {
+            &quot;args&quot;: [&quot;The wonderful bear, Boots &quot;],
+            &quot;want&quot;: &quot;the wonderful bear boots&quot;,
+        },
+        {
+            &quot;args&quot;: [23],
+            &quot;kwargs&quot;: {},
+            &quot;want&quot;: &quot;the wonderful bear, boots&quot;,
+            &quot;want_error&quot;: True,
+            &quot;exception&quot;: AttributeError
+        },
+    ]
+
+    test_cases = [Case(**things) for things in test_cases]
+    RUN(mod.simplify, test_cases)
+</code></pre>
+<p>If we want to add a new test case, we just need to add a dictionary in the list. And we can keep appending this until we are satisfied. And there we have it, a beautiful, concise and <em>pythonic</em> way to write table-driven tests.</p>
+<h2>Limitations</h2>
+<ul>
+<li>I have written this for functions with returning values. I haven't yet tried this approach for executive functions or <em>void</em> functions.</li>
+<li>This might be hard to integrate for the cases with dependency like databases, this is more helpful to test the helper functions.</li>
+</ul>
+<p>While this is a beautiful framework for writing tests when we have a good <code>wanted</code> and <code>got</code> pairs. (remember the Leetcode problems?) This isn't the only way to write test case. You can write them however you want. This is just an interesting approach inspired by golang.</p>
+<h2>When Should We Write Test Cases?</h2>
+<p>I have heard people say that we should write test cases for every function that we write. I don't agree with that. We should try to write test cases for every function but we should avoid some scenes as well.</p>
+<p>We shouldn't write test cases where the input depends on something external like a big file or a database. That should be tested separately in a manual or some other way. For example, my work involves reading a large file called <code>.lst</code> files and then extracting information. While I can collect a bunch of different files to write cases for them, I should avoid that. We might expose valuable company information while testing. We might have to gather a lot of data just to write the one test case which brings me to the second point.</p>
+<p>If setting up a test case is more expensive than the value it provides then we should shy away from it. And that happens when we have a lot of external dependencies. For example, to test a function that does some database stuff, we might need to install a database and set up the while thing. These cases should be broken down into simpler helper functions, and only those helper functions should be tested.</p>
+<p>If a helper function is to repeated many times is used widely in very different areas in the codebase, then we should definitely write test cases for it. But if the function is called just once, then we are wasting our time. And also if a function is very simple, e.g. does only lowercase in our example, then there is no point writing a test case in that.</p>
+<h2>Testing Automation with GitHub Actions</h2>
+<p>Now that we have set up a few test cases, we should connect them with GitHub actions. There are following benefits:</p>
+<ul>
+<li>It runs automatically on every push, and if a test fails, it sends us a nice email.</li>
+<li>It makes collaboration easier by checking on every PR.</li>
+<li>It informs you if you refactoring breaks anything. So you can go back to previous comments.</li>
+</ul>
+<p>You can check python testing workflows in GitHub actions marketplace. I use this for all my repositories. Here is a test file.</p>
+<pre><code class="language-yml">name: RAG Testing
+
+on:
+  push:
+    branches: [ &quot;main&quot; ]
+  pull_request:
+    branches: [ &quot;main&quot; ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.13
+      uses: actions/setup-python@v3
+      with:
+        python-version: &quot;3.13&quot;
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
+        pip install -r requirements.txt  
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127
+    - name: Test with pytest
+      run: |
+        pytest
+</code></pre>
+<p>I haven't written this, I have directly copied from GitHub marketplace. but you can copy and paste this too. To use this, make a <code>.github/workflows</code> directory in your root, and put this code in a called called <code>actions.yml</code>. This should work just as fine. Make sure you have a <code>requirements.txt</code> file.</p>
+<h2>Conclusion</h2>
+<p>Writing good tests has always been an industry standard in the tech community. Most, if not all, the companies in the world implement unit test cases to make software developments standard and smooth. But outside the corporate test cases are rather underrated. I think there are many interesting uses of test cases.
+If you are a computer science teacher, you an use test cases to grad assignments from your students. You can also put it through PR and use GitHub actions to auto grad the assignments.
+If you are a researcher, and you are trying different models (for moving the droplet in chemical field for example.) You can write test cases to determine the level of physics your model is reaching.
+If you are writing blog posts like this, you should also implement test cases to prevent yourself from publishing bullhit online.</p>
+<p>Anyway I hope you have enjoyed this blog post. If you did, do read, share it. And if you want to give a feedback you can reach me at <a href="mailto:shyam10kwd@gmail.com">my email</a>.</p>
+
+    </div>
+</article>
+
+    </main>
+
+    <footer class="py-10 border-t border-gray-100 dark:border-gray-900 mt-auto text-center">
+        <div class="max-w-4xl mx-auto px-6">
+            <p class="text-[0.8rem] text-gray-400 dark:text-gray-500">
+                &copy; 2026 The Rest Frame.
+            </p>
+        </div>
+    </footer>
+</body>
+
+</html>
