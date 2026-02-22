@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/iashyam/gossg/src"
 	"gopkg.in/yaml.v3"
 )
 
@@ -26,12 +27,12 @@ func loadConfig() Config {
 	return cfg
 }
 
-//go:embed templates/*
+//go:embed src/templates/*
 var templatesFS embed.FS
 
 func main() {
 	// 1. Initialize Site and Config
-	site := NewSite()
+	site := src.NewSite()
 	cfg := loadConfig()
 
 	// 2. Load Content
@@ -77,11 +78,11 @@ func main() {
 		return template.Must(t.ParseFS(templatesFS, files...))
 	}
 
-	postTmpl := parseTmpl("templates/base.html", "templates/post.html")
-	indexTmpl := parseTmpl("templates/base.html", "templates/index.html")
-	listTmpl := parseTmpl("templates/base.html", "templates/list.html")
-	tagsTmpl := parseTmpl("templates/base.html", "templates/tags.html")
-	projTmpl := parseTmpl("templates/base.html", "templates/projects.html")
+	postTmpl := parseTmpl("src/templates/base.html", "src/templates/post.html")
+	indexTmpl := parseTmpl("src/templates/base.html", "src/templates/index.html")
+	listTmpl := parseTmpl("src/templates/base.html", "src/templates/list.html")
+	tagsTmpl := parseTmpl("src/templates/base.html", "src/templates/tags.html")
+	projTmpl := parseTmpl("src/templates/base.html", "src/templates/projects.html")
 
 	// 5. Generate Pages
 	for _, page := range site.Pages {
