@@ -109,7 +109,7 @@ func main() {
 	}
 
 	// 7. Generate Home Page (Index) with Pagination
-	postsPerPage := 6
+	postsPerPage := 5
 	totalPosts := len(site.Posts)
 	totalPages := (totalPosts + postsPerPage - 1) / postsPerPage
 	if totalPages == 0 {
