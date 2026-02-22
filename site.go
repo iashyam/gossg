@@ -115,7 +115,7 @@ func (s *Site) loadPosts(dir string) error {
 		}
 
 		hash := ComputeHash(content)
-		slug := strings.TrimSuffix(file.Name(), ".md")
+		slug := strings.ReplaceAll(strings.TrimSuffix(file.Name(), ".md"), " ", "-")
 
 		var post Post
 		if cachedFile, hit := s.Cache.Files[path]; hit && cachedFile.Hash == hash {
@@ -202,7 +202,7 @@ func (s *Site) loadPages(dir string) error {
 		}
 
 		hash := ComputeHash(content)
-		slug := strings.TrimSuffix(file.Name(), ".md")
+		slug := strings.ReplaceAll(strings.TrimSuffix(file.Name(), ".md"), " ", "-")
 
 		var page Page
 		if cachedFile, hit := s.Cache.Files[path]; hit && cachedFile.Hash == hash {
@@ -273,7 +273,7 @@ func (s *Site) loadProjects(dir string) error {
 		}
 
 		hash := ComputeHash(content)
-		slug := strings.TrimSuffix(file.Name(), ".md")
+		slug := strings.ReplaceAll(strings.TrimSuffix(file.Name(), ".md"), " ", "-")
 
 		var project Project
 		if cachedFile, hit := s.Cache.Files[path]; hit && cachedFile.Hash == hash {
