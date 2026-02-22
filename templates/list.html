@@ -43,7 +43,7 @@
                         class="sm:hidden text-xs text-gray-500 dark:text-gray-400 font-serif tracking-wide block mb-1">{{
                         .Date }}</time>
                     <h2 class="text-lg sm:text-[1.15rem] leading-snug">
-                        <a href="/posts/{{ .Slug }}.html"
+                        <a href="{{ url (print " /posts/" .Slug ".html" ) }}"
                             class="text-[#0055BB] dark:text-[#66A3FF] hover:underline font-serif tracking-wide">
                             {{ .Title }}
                         </a>

@@ -7,14 +7,32 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
+
+	"gopkg.in/yaml.v3"
 )
+
+type Config struct {
+	BaseURL string `yaml:"baseURL"`
+}
+
+func loadConfig() Config {
+	var cfg Config
+	data, err := os.ReadFile("config.yaml")
+	if err == nil {
+		yaml.Unmarshal(data, &cfg)
+	}
+	cfg.BaseURL = strings.TrimSuffix(cfg.BaseURL, "/")
+	return cfg
+}
 
 //go:embed templates/*
 var templatesFS embed.FS
 
 func main() {
-	// 1. Initialize Site
+	// 1. Initialize Site and Config
 	site := NewSite()
+	cfg := loadConfig()
 
 	// 2. Load Content
 	fmt.Println("Loading content...")
@@ -44,12 +62,26 @@ func main() {
 	}
 
 	// 5. Load Templates
-	// We parse the base template alongside each specific template from the embedded filesystem
-	postTmpl := template.Must(template.ParseFS(templatesFS, "templates/base.html", "templates/post.html"))
-	indexTmpl := template.Must(template.ParseFS(templatesFS, "templates/base.html", "templates/index.html"))
-	listTmpl := template.Must(template.ParseFS(templatesFS, "templates/base.html", "templates/list.html"))
-	tagsTmpl := template.Must(template.ParseFS(templatesFS, "templates/base.html", "templates/tags.html"))
-	projTmpl := template.Must(template.ParseFS(templatesFS, "templates/base.html", "templates/projects.html"))
+	funcMap := template.FuncMap{
+		"url": func(path string) string {
+			path = strings.TrimSpace(path)
+			if !strings.HasPrefix(path, "/") {
+				path = "/" + path
+			}
+			return cfg.BaseURL + path
+		},
+	}
+
+	parseTmpl := func(files ...string) *template.Template {
+		t := template.New(filepath.Base(files[0])).Funcs(funcMap)
+		return template.Must(t.ParseFS(templatesFS, files...))
+	}
+
+	postTmpl := parseTmpl("templates/base.html", "templates/post.html")
+	indexTmpl := parseTmpl("templates/base.html", "templates/index.html")
+	listTmpl := parseTmpl("templates/base.html", "templates/list.html")
+	tagsTmpl := parseTmpl("templates/base.html", "templates/tags.html")
+	projTmpl := parseTmpl("templates/base.html", "templates/projects.html")
 
 	// 5. Generate Pages
 	for _, page := range site.Pages {

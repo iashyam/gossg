@@ -15,7 +15,7 @@
             <a href="{{ .Link }}" target="_blank" rel="noopener noreferrer"
                 class="block aspect-[16/10] sm:aspect-video relative overflow-hidden bg-gray-100 dark:bg-gray-800">
                 {{ if .Image }}
-                <img src="/{{ .Image }}" alt="{{ .Title }}"
+                <img src="{{ url (print " /" .Image) }}" alt="{{ .Title }}"
                     class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 md:group-hover:scale-105">
                 {{ else }}
                 <div
