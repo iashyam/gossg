@@ -5,8 +5,9 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"gossg/src/parser"
 	"os"
+
+	"github.com/iashyam/gossg/src/parser"
 )
 
 // CachedFile represents the parsed data and hash of a single markdown file

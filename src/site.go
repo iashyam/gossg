@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
-	"gossg/src/parser"
 	"html/template"
 	"os"
 	"path/filepath"
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/iashyam/gossg/src/parser"
 
 	mathjax "github.com/litao91/goldmark-mathjax"
 	"github.com/yuin/goldmark"

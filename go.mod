@@ -1,4 +1,4 @@
-module gossg
+module github.com/iashyam/gossg
 
 go 1.25.5
 
