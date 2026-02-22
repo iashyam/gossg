@@ -41,7 +41,7 @@
 
     {{ if .Image }}
     <div class="max-w-4xl mx-auto mb-10 sm:mb-14">
-        <img src="{{ url (print "/" .Image) }}" alt="{{ .Title }}" class="w-full h-auto object-cover rounded-lg">
+        <img src="{{ url .Image }}" alt="{{ .Title }}" class="w-full h-auto object-cover rounded-lg">
     </div>
     {{ end }}
 
