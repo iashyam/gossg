@@ -1,12 +1,16 @@
 package main
 
 import (
+	"embed"
 	"fmt"
 	"html/template"
 	"io"
 	"os"
 	"path/filepath"
 )
+
+//go:embed templates/*
+var templatesFS embed.FS
 
 func main() {
 	// 1. Initialize Site
@@ -40,12 +44,12 @@ func main() {
 	}
 
 	// 5. Load Templates
-	// We parse the base template alongside each specific template
-	postTmpl := template.Must(template.ParseFiles("templates/base.html", "templates/post.html"))
-	indexTmpl := template.Must(template.ParseFiles("templates/base.html", "templates/index.html"))
-	listTmpl := template.Must(template.ParseFiles("templates/base.html", "templates/list.html"))
-	tagsTmpl := template.Must(template.ParseFiles("templates/base.html", "templates/tags.html"))
-	projTmpl := template.Must(template.ParseFiles("templates/base.html", "templates/projects.html"))
+	// We parse the base template alongside each specific template from the embedded filesystem
+	postTmpl := template.Must(template.ParseFS(templatesFS, "templates/base.html", "templates/post.html"))
+	indexTmpl := template.Must(template.ParseFS(templatesFS, "templates/base.html", "templates/index.html"))
+	listTmpl := template.Must(template.ParseFS(templatesFS, "templates/base.html", "templates/list.html"))
+	tagsTmpl := template.Must(template.ParseFS(templatesFS, "templates/base.html", "templates/tags.html"))
+	projTmpl := template.Must(template.ParseFS(templatesFS, "templates/base.html", "templates/projects.html"))
 
 	// 5. Generate Pages
 	for _, page := range site.Pages {
