@@ -8,11 +8,12 @@ import (
 
 // Frontmatter represents the metadata at the top of a Markdown file.
 type Frontmatter struct {
-	Title string   `yaml:"title"`
-	Date  string   `yaml:"date"`
-	Tags  []string `yaml:"tags"`
-	Image string   `yaml:"image"`
-	Link  string   `yaml:"link"`
+	Title       string   `yaml:"title"`
+	Date        string   `yaml:"date"`
+	Tags        []string `yaml:"tags"`
+	Image       string   `yaml:"image"`
+	Link        string   `yaml:"link"`
+	Description string   `yaml:"description"`
 }
 
 // ExtractFrontmatter separates the YAML frontmatter from the Markdown content.

@@ -34,10 +34,15 @@
                     <time class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest block">{{
                         .Date }}</time>
                 </div>
-                <h2 class="text-xl font-bold mb-3 text-gray-900 dark:text-gray-100 leading-tight">
+                <h2 class="text-xl font-bold mb-2 text-gray-900 dark:text-gray-100 leading-tight">
                     <a href="{{ .Link }}" target="_blank" rel="noopener noreferrer"
                         class="before:absolute before:inset-0">{{ .Title }}</a>
                 </h2>
+                {{ if .Description }}
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
+                    {{ .Description }}
+                </p>
+                {{ end }}
 
                 <div class="flex flex-wrap gap-x-3 gap-y-2 mt-auto relative z-20">
                     {{ range .Tags }}
