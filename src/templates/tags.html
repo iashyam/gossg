@@ -1,7 +1,7 @@
 {{ define "content" }}
 <div class="animate-in fade-in w-full max-w-[800px] mx-auto py-12 px-6">
     <div class="mb-16">
-        <h1 class="text-4xl font-serif text-gray-900 dark:text-gray-100 mb-2">tags</h1>
+        <h1 class="text-4xl font-serif text-gray-900 dark:text-gray-100 mb-2">{{ lower .Title }}</h1>
         <p class="text-[1.1rem] text-gray-500 dark:text-gray-400 font-serif">Browse posts categorized by specific
             topics.</p>
     </div>
@@ -9,7 +9,7 @@
     <ul class="flex flex-col gap-6">
         {{ range $tag, $posts := .Tags }}
         <li class="flex items-center gap-4">
-            <a href="{{ url (print "/tags/" $tag ".html" ) }}"
+            <a href="{{ url (print " /tags/" $tag ".html" ) }}"
                 class="text-2xl font-serif text-[#0055BB] dark:text-[#66A3FF] hover:underline transition-colors">
                 #{{ $tag }}
             </a>

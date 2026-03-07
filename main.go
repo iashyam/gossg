@@ -14,7 +14,9 @@ import (
 )
 
 type Config struct {
-	BaseURL string `yaml:"baseURL"`
+	BaseURL      string `yaml:"baseURL"`
+	SiteName     string `yaml:"siteName"`
+	CustomDomain string `yaml:"customDomain"`
 }
 
 func loadConfig() Config {
@@ -70,6 +72,12 @@ func main() {
 		return
 	}
 
+	if cfg.CustomDomain != "" {
+		if err := os.WriteFile("public/CNAME", []byte(cfg.CustomDomain), 0644); err != nil {
+			fmt.Printf("Warning: failed to write CNAME file: %v\n", err)
+		}
+	}
+
 	// 4. Copy Static Assets
 	fmt.Println("Copying assets...")
 	if err := copyDir("content/assets", "public/assets"); err != nil {
@@ -85,6 +93,13 @@ func main() {
 			}
 			return cfg.BaseURL + path
 		},
+		"siteName": func() string {
+			if cfg.SiteName != "" {
+				return cfg.SiteName
+			}
+			return "The Rest Frame"
+		},
+		"lower": strings.ToLower,
 	}
 
 	parseTmpl := func(files ...string) *template.Template {
